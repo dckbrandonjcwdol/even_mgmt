@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "referralCode" DROP NOT NULL,
+ALTER COLUMN "role" SET DEFAULT 'CUSTOMER';
