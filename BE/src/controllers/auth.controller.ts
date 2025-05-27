@@ -6,6 +6,7 @@ import path from "path";
 import fs from "fs";
 import Handlebars from "handlebars";
 import { transporter } from "../helpers/mailer";
+import { Role } from "../../generated/prisma";
 
 
 export class AuthController{
@@ -89,7 +90,8 @@ export class AuthController{
             username: true,
             email: true,
             password: true,
-            avatar: true
+            avatar: true,
+            isVerified: true,
           }
         });
   
@@ -103,6 +105,11 @@ export class AuthController{
           res.status(401).send({ message: "Invalid password" });
           return;
         }
+
+        if (!user.isVerified) {
+          res.status(402).send({ message: "Account not verified, please check your confirmation email !" });
+          return;
+        } 
   
         const payload = { id: user.id, role: "user" };
         const token = sign(payload, process.env.SECRET_KEY!, { expiresIn: "1h" });
@@ -150,6 +157,16 @@ export class AuthController{
         res.status(400).send(err);
       }
     }
+
+  async getRole(req: Request, res: Response) {
+     try {
+        const roles = Object.values(Role).slice(1);
+        res.status(200).json(roles);
+      }catch(err){
+        console.log(err);
+        res.status(400).send({ error: 'Failed to get roles', detail: err });
+      }     
+  }
 
 }
 
