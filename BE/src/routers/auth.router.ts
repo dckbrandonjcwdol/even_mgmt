@@ -17,12 +17,14 @@ export class AuthRouter {
     this.router.get("/role", this.authController.getRole);
     this.router.post("/register", validateRegister, this.authController.register);
     this.router.post("/login", this.authController.login);
+    this.router.get('/referral-validate', this.authController.referralValidation)
 
     this.router.patch(
       "/verify", 
       verifyTokenVerification, 
       this.authController.verify)
 
+  
   }
 
   public getRouter(): Router {

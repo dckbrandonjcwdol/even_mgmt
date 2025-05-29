@@ -26,10 +26,32 @@ interface IRegisterForm {
   email: string;
   password: string;
   role: string;
+  referralCode: string;
 }
 
 export default function FormRegister() {
   const [roles, setRoles] =  useState<string[]>([]);
+  const [referralValid, setReferralValid] = useState<boolean | null>(null);
+  const [referralChecking, setReferralChecking] = useState(false);
+
+  // Fungsi untuk validasi referral
+  const validateReferralCode = async (code: string) => {
+    if (!code) {
+      setReferralValid(null);
+      return;
+    }
+
+    setReferralChecking(true);
+    try {
+      const res = await axios.get(`/auth/referral-validate?code=${code}`);
+      setReferralValid(res.data.valid);
+    } catch (err) {
+      setReferralValid(false);
+    } finally {
+      setReferralChecking(false);
+    }
+  };      
+          
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -49,15 +71,37 @@ export default function FormRegister() {
     username: "",
     email: "",
     password: "",
-    role: ""
+    role: "",
+    referralCode: ""
   };
+
+  // const onRegister = async (
+  //   value: IRegisterForm,
+  //   action: FormikHelpers<IRegisterForm>
+  // ) => {
+  //   try {
+  //     // await axios.post("/users/register", value);
+  //     await axios.post("/auth/register", value);
+  //     toast.success("Register successfully");
+  //     action.resetForm();
+  //   } catch (err) {
+  //     console.log(err);
+  //     action.setSubmitting(false);
+  //     toast.error("Register failed");
+  //   }
+  // };
 
   const onRegister = async (
     value: IRegisterForm,
     action: FormikHelpers<IRegisterForm>
   ) => {
     try {
-      // await axios.post("/users/register", value);
+      if (referralValid === false) {
+        toast.error("Referral code invalid");
+        action.setSubmitting(false);
+        return;
+      }
+
       await axios.post("/auth/register", value);
       toast.success("Register successfully");
       action.resetForm();
@@ -69,7 +113,8 @@ export default function FormRegister() {
   };
 
   return (
-    <div>
+     <div className="max-w-md mx-auto mt-8 p-4 border rounded-md shadow-md">
+      <h2 className="text-xl font-semibold mb-4">Sign Up</h2>
       <Formik
         initialValues={initialValues}
         validationSchema={RegisterSchema}
@@ -79,6 +124,15 @@ export default function FormRegister() {
       >
         {(props: FormikProps<IRegisterForm>) => {
           const { touched, errors, isSubmitting } = props;
+
+          useEffect(() => {
+            const timeout = setTimeout(() => {
+              validateReferralCode(props.values.referralCode);
+            }, 500); // debounce agar tidak langsung trigger tiap ketik
+
+            return () => clearTimeout(timeout);
+          }, [props.values.referralCode]);
+          
           return (
             <Form>
               <div className="flex flex-col">
@@ -141,6 +195,23 @@ export default function FormRegister() {
                 </Field>
                 {touched.role && errors.role && (
                   <div className="text-red-500 text-[12px] -mt-2 mb-2">{errors.role}</div>
+                )}
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="referralCode" className="text-md">
+                  Referral Code
+                </label>
+                <Field
+                  name="referralCode"
+                  type="text"
+                  className="mb-2 p-2 border border-gray-600 rounded-md"
+                />
+                {referralChecking && (
+                  <div className="text-gray-500 text-[12px] -mt-2 mb-2">Checking...</div>
+                )}
+                {referralValid === false && (
+                  <div className="text-red-500 text-[12px] -mt-2 mb-2">Referral code is invalid</div>
                 )}
               </div>
 

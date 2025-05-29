@@ -1,3 +1,5 @@
+
+
 import Link from "next/link";
 import Wrapper from "./wrapper";
 import Image from "next/image";
@@ -5,8 +7,11 @@ import { auth } from "@/lib/auth";
 import Logout from "./logout";
 import { getBrandName } from "@/lib/brand";
 
+import Theme from "./theme";
+
 export default async function Navbar() {
   const data = await auth();
+
 
   return (
     <div className="sticky top-0 z-10 bg-white shadow-sm">
@@ -15,7 +20,7 @@ export default async function Navbar() {
           <Link href="/" className="flex items-center gap-2">
             <Image
               alt="Eventique Logo"
-              src="/logo.png"
+              src="/logo4.png"
               width={32}
               height={32}
               className="h-8 w-8 object-contain"
@@ -32,6 +37,7 @@ export default async function Navbar() {
                 {data.user.username}
               </span>
               <Logout />
+              
             </div>
           ) : (
             <div className="flex gap-2 h-[30px]">

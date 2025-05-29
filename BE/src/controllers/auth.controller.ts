@@ -12,9 +12,9 @@ import { Role } from "../../generated/prisma";
 export class AuthController{
   async register(req: Request, res: Response) {
       try {
-        const { username, email, password } = req.body;
-    
-        if (!username || !email || !password) {
+        const { username, email, password, role } = req.body;
+
+        if (!username || !email || !password || !role) {
           res.status(400).send({ message: "All fields are required" });
           return; 
         }
@@ -27,15 +27,62 @@ export class AuthController{
     
         const salt = await genSalt(10);
         const hashedPassword = await hash(password, salt);
-    
+        const referralCode = [...Array(8)]
+          .map(() => Math.random().toString(36).charAt(2).toUpperCase())
+          .join('');
+        
+
+        const referredCode: string | undefined = req.body.referralCode;
+
+        let referredById: number | null = null;
+
+        if (referredCode) {
+          const referredByUser = await prisma.user.findFirst({
+            where: { referralCode: referredCode },
+            select: { id: true },
+          });
+
+          referredById = referredByUser?.id ?? null;
+
+        }
+
+
         const user = await prisma.user.create({
           data: {
             username,
             email,
-            password: hashedPassword
-          }
+            password: hashedPassword,
+            role,
+            referralCode, // field referralCode ini seharusnya bertipe string
+            referredBy: referredById, // number | null, sesuai skema Prisma
+          },
         });
-    
+
+        if (typeof referredById === "number") {
+          // misalnya kamu sudah punya referralId (id dari entitas Referral yang relevan)
+          const referral = await prisma.referral.create({
+            data: {
+              referrerId: referredById,
+              referredUserId: user.id,
+            }
+          });
+
+          const pointVal = parseInt(process.env.REFERRAL_POINT || '0', 10);
+          const monthsToAdd = parseInt(process.env.REFERRAL_POINT_AGE || '0', 10);
+          const expiresAt = new Date();
+                            expiresAt.setMonth(expiresAt.getMonth() + monthsToAdd);
+
+          
+          await prisma.point.create({
+            data: {
+              userId: referredById,
+              points: pointVal,
+              earnedFromId: referral.id,
+
+              expiresAt: expiresAt, // contoh: kadaluarsa dalam 30 hari
+            },
+          });
+        }
 
         //token untuk regustrasi
         const payload = { id: user.id };
@@ -92,6 +139,7 @@ export class AuthController{
             password: true,
             avatar: true,
             isVerified: true,
+            role: true,
           }
         });
   
@@ -111,8 +159,9 @@ export class AuthController{
           return;
         } 
   
-        const payload = { id: user.id, role: "user" };
+        const payload = { id: user.id, role: user.role };
         const token = sign(payload, process.env.SECRET_KEY!, { expiresIn: "1h" });
+
   
         // Hapus password dari response
         const { password: _, ...userWithoutPassword } = user;
@@ -167,6 +216,23 @@ export class AuthController{
         res.status(400).send({ error: 'Failed to get roles', detail: err });
       }     
   }
+
+
+  async referralValidation(req: Request, res: Response) {
+     try {
+        const { code } = req.query;
+
+        const user = await prisma.user.findUnique({
+          where: { referralCode: code as string },
+        });
+
+        res.status(200).json({ valid: !!user });
+      }catch(err){
+        console.log(err);
+        res.status(400).send({ error: 'Referral Code is invalid', detail: err });
+      }     
+  }
+
 
 }
 

@@ -6,6 +6,7 @@ declare module "next-auth" {
       username?: string;
       email: string;
       avatar?: string;
+      role?: string | null;    // tambahkan role di sini
     };
     userToken?: string;
   }
@@ -14,6 +15,7 @@ declare module "next-auth" {
     username?: string;
     email: string;
     avatar?: string;
+    role?: string | null;     // juga di User (opsional)
     userToken?: string;
   }
 
@@ -21,6 +23,7 @@ declare module "next-auth" {
     username?: string;
     email: string;
     avatar?: string;
+    role?: string | null;     // juga di JWT
     userToken?: string;
   }
 }

@@ -4,7 +4,7 @@ import "./globals.css";
 import { Bounce, ToastContainer } from "react-toastify";
 import Navbar from "@/components/navbar";
 import { SessionProvider } from "next-auth/react";
-
+import { ThemeProvider } from "@/context/ThemeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: ` {process.env.BRAND} Event Management`,
-  description: `{process.env.BRAND} Event Management`,
+  title: `${process.env.NEXT_PUBLIC_BRAND} Event Management`,
+  description: `${process.env.NEXT_PUBLIC_BRAND} Event Management`,
 };
 
 export default function RootLayout({
@@ -28,13 +28,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SessionProvider>
-          <Navbar />
-          {children}
-        </SessionProvider>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <ThemeProvider>
+          <SessionProvider>
+            <Navbar />
+            {children}
+          </SessionProvider>
+        </ThemeProvider>
         <ToastContainer
           position="bottom-right"
           autoClose={3000}

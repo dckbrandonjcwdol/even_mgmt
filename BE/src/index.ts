@@ -1,36 +1,34 @@
-import express, { Application, Request, Response } from 'express';
-// import { UserRouter } from './routers/user.router';
-import { AuthRouter } from './routers/auth.router';
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import path from "path";
-// import { BlogRouter } from './routers/blog.router';
+
+import { AuthRouter } from "./routers/auth.router";
+import { EventRouter } from "./routers/event.router";
 
 const PORT: number = 8000;
 
 const app: Application = express();
+
+// Middlewares
 app.use(express.json());
-app.use(cors());    
+app.use(cors());
 
-app.get("/api", (req: Request, res: Response) => {
-    res.status(200).send({ message: "Welcome to my API" });
-});
-
-//agar file image under folder public bisa dibuka di browser url
+// Static file serving (akses gambar/file di folder public)
 app.use("/api/public", express.static(path.join(__dirname, "../public")));
 
-// Perbaikan: Hindari nama variabel yang sama dengan class
-// const userRouter = new UserRouter();
-// app.use("/api/users", userRouter.getRouter());
+// Root route
+app.get("/api", (req: Request, res: Response) => {
+  res.status(200).send({ message: "Welcome to my API" });
+});
 
-
-const authRouter = new AuthRouter;
+// Router registrations
+const authRouter = new AuthRouter();
 app.use("/api/auth", authRouter.getRouter());
 
+const eventRouter = new EventRouter();
+app.use("/api/", eventRouter.getRouter());
 
-// const blogRouter = new BlogRouter();
-// app.use("/api/blogs", blogRouter.getRouter());
-
-
-app.listen(PORT, () => { 
-    console.log(`Server running on: http://localhost:${PORT}/api`);
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running at: http://localhost:${PORT}/api`);
 });

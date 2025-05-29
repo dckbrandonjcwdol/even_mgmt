@@ -24,7 +24,7 @@ model User {
   isVerified   Boolean  @default(false)
   role         Role     @default(CUSTOMER)
   referralCode String?  @unique
-  referredBy   String? // kode referral
+  referredBy   Int?     // kolom baru dengan tipe Int?
   createdAt    DateTime @default(now())
 
   events        Event[]        @relation("OrganizedEvents")

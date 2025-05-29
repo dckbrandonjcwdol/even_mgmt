@@ -1906,10 +1906,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     id: number | null
+    referredBy: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: number | null
+    referredBy: number | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -1921,7 +1923,7 @@ export namespace Prisma {
     isVerified: boolean | null
     role: $Enums.Role | null
     referralCode: string | null
-    referredBy: string | null
+    referredBy: number | null
     createdAt: Date | null
   }
 
@@ -1934,7 +1936,7 @@ export namespace Prisma {
     isVerified: boolean | null
     role: $Enums.Role | null
     referralCode: string | null
-    referredBy: string | null
+    referredBy: number | null
     createdAt: Date | null
   }
 
@@ -1955,10 +1957,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateInputType = {
     id?: true
+    referredBy?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
+    referredBy?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -2096,7 +2100,7 @@ export namespace Prisma {
     isVerified: boolean
     role: $Enums.Role
     referralCode: string | null
-    referredBy: string | null
+    referredBy: number | null
     createdAt: Date
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
@@ -2213,7 +2217,7 @@ export namespace Prisma {
       isVerified: boolean
       role: $Enums.Role
       referralCode: string | null
-      referredBy: string | null
+      referredBy: number | null
       createdAt: Date
     }, ExtArgs["result"]["user"]>
     composites: {}
@@ -2653,7 +2657,7 @@ export namespace Prisma {
     readonly isVerified: FieldRef<"User", 'Boolean'>
     readonly role: FieldRef<"User", 'Role'>
     readonly referralCode: FieldRef<"User", 'String'>
-    readonly referredBy: FieldRef<"User", 'String'>
+    readonly referredBy: FieldRef<"User", 'Int'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
   }
     
@@ -13850,7 +13854,7 @@ export namespace Prisma {
     isVerified?: BoolFilter<"User"> | boolean
     role?: EnumRoleFilter<"User"> | $Enums.Role
     referralCode?: StringNullableFilter<"User"> | string | null
-    referredBy?: StringNullableFilter<"User"> | string | null
+    referredBy?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     events?: EventListRelationFilter
     registrations?: RegistrationListRelationFilter
@@ -13893,7 +13897,7 @@ export namespace Prisma {
     avatar?: StringNullableFilter<"User"> | string | null
     isVerified?: BoolFilter<"User"> | boolean
     role?: EnumRoleFilter<"User"> | $Enums.Role
-    referredBy?: StringNullableFilter<"User"> | string | null
+    referredBy?: IntNullableFilter<"User"> | number | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     events?: EventListRelationFilter
     registrations?: RegistrationListRelationFilter
@@ -13934,7 +13938,7 @@ export namespace Prisma {
     isVerified?: BoolWithAggregatesFilter<"User"> | boolean
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     referralCode?: StringNullableWithAggregatesFilter<"User"> | string | null
-    referredBy?: StringNullableWithAggregatesFilter<"User"> | string | null
+    referredBy?: IntNullableWithAggregatesFilter<"User"> | number | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
   }
 
@@ -14580,7 +14584,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationCreateNestedManyWithoutUserInput
@@ -14600,7 +14604,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationUncheckedCreateNestedManyWithoutUserInput
@@ -14619,7 +14623,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUpdateManyWithoutUserNestedInput
@@ -14639,7 +14643,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUncheckedUpdateManyWithoutUserNestedInput
@@ -14659,7 +14663,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
   }
 
@@ -14671,7 +14675,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -14684,7 +14688,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -15351,6 +15355,17 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -15442,6 +15457,7 @@ export namespace Prisma {
 
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -15472,6 +15488,7 @@ export namespace Prisma {
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -15544,6 +15561,22 @@ export namespace Prisma {
     _max?: NestedEnumRoleFilter<$PrismaModel>
   }
 
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -15590,17 +15623,6 @@ export namespace Prisma {
   export type email_verificationsSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
-  }
-
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type UserScalarRelationFilter = {
@@ -15690,22 +15712,6 @@ export namespace Prisma {
     price?: SortOrder
     totalSeats?: SortOrder
     availableSeats?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type EventScalarRelationFilter = {
@@ -16168,6 +16174,14 @@ export namespace Prisma {
     set?: $Enums.Role
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
@@ -16436,14 +16450,6 @@ export namespace Prisma {
     connectOrCreate?: PromotionCreateOrConnectWithoutEventInput | PromotionCreateOrConnectWithoutEventInput[]
     createMany?: PromotionCreateManyEventInputEnvelope
     connect?: PromotionWhereUniqueInput | PromotionWhereUniqueInput[]
-  }
-
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type UserUpdateOneRequiredWithoutEventsNestedInput = {
@@ -16909,6 +16915,17 @@ export namespace Prisma {
     not?: NestedEnumRoleFilter<$PrismaModel> | $Enums.Role
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -16981,17 +16998,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -17008,20 +17014,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumRoleFilter<$PrismaModel>
     _max?: NestedEnumRoleFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -17049,6 +17041,20 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedEnumRegistrationStatusFilter<$PrismaModel = never> = {
@@ -17469,7 +17475,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     registrations?: RegistrationCreateNestedManyWithoutUserInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -17488,7 +17494,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     registrations?: RegistrationUncheckedCreateNestedManyWithoutUserInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -17634,7 +17640,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: RegistrationUpdateManyWithoutUserNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -17653,7 +17659,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     registrations?: RegistrationUncheckedUpdateManyWithoutUserNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -17899,7 +17905,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventCreateNestedManyWithoutOrganizerInput
     reviews?: ReviewCreateNestedManyWithoutUserInput
@@ -17918,7 +17924,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
     reviews?: ReviewUncheckedCreateNestedManyWithoutUserInput
@@ -18032,7 +18038,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutOrganizerNestedInput
     reviews?: ReviewUpdateManyWithoutUserNestedInput
@@ -18051,7 +18057,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
     reviews?: ReviewUncheckedUpdateManyWithoutUserNestedInput
@@ -18167,7 +18173,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationCreateNestedManyWithoutUserInput
@@ -18186,7 +18192,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationUncheckedCreateNestedManyWithoutUserInput
@@ -18262,7 +18268,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUpdateManyWithoutUserNestedInput
@@ -18281,7 +18287,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUncheckedUpdateManyWithoutUserNestedInput
@@ -18437,7 +18443,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationCreateNestedManyWithoutUserInput
@@ -18456,7 +18462,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationUncheckedCreateNestedManyWithoutUserInput
@@ -18479,7 +18485,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationCreateNestedManyWithoutUserInput
@@ -18498,7 +18504,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationUncheckedCreateNestedManyWithoutUserInput
@@ -18554,7 +18560,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUpdateManyWithoutUserNestedInput
@@ -18573,7 +18579,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUncheckedUpdateManyWithoutUserNestedInput
@@ -18602,7 +18608,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUpdateManyWithoutUserNestedInput
@@ -18621,7 +18627,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUncheckedUpdateManyWithoutUserNestedInput
@@ -18667,7 +18673,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationCreateNestedManyWithoutUserInput
@@ -18686,7 +18692,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationUncheckedCreateNestedManyWithoutUserInput
@@ -18738,7 +18744,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUpdateManyWithoutUserNestedInput
@@ -18757,7 +18763,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUncheckedUpdateManyWithoutUserNestedInput
@@ -18799,7 +18805,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationCreateNestedManyWithoutUserInput
@@ -18818,7 +18824,7 @@ export namespace Prisma {
     isVerified?: boolean
     role?: $Enums.Role
     referralCode?: string | null
-    referredBy?: string | null
+    referredBy?: number | null
     createdAt?: Date | string
     events?: EventUncheckedCreateNestedManyWithoutOrganizerInput
     registrations?: RegistrationUncheckedCreateNestedManyWithoutUserInput
@@ -18880,7 +18886,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUpdateManyWithoutUserNestedInput
@@ -18899,7 +18905,7 @@ export namespace Prisma {
     isVerified?: BoolFieldUpdateOperationsInput | boolean
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     referralCode?: NullableStringFieldUpdateOperationsInput | string | null
-    referredBy?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     events?: EventUncheckedUpdateManyWithoutOrganizerNestedInput
     registrations?: RegistrationUncheckedUpdateManyWithoutUserNestedInput

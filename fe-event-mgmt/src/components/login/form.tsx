@@ -33,10 +33,12 @@ export default function FormLogin() {
     try {
       const { data } = await axios.post("/auth/login", value);
       await signIn("credentials", {
-        redirectTo: "/",
+        callbackUrl: "/home",
+        id: data.user.id,
         username: data.user.username,
         email: data.user.email,
         userToken: data.token,
+        role: data.role,
       });
       // console.log(data);
       toast.success(data.message);
@@ -70,7 +72,9 @@ export default function FormLogin() {
                 <Field
                   name="login"
                   type="text"
-                  className="mb-2 p-2 border border-gray-600 rounded-md"
+                  className="mb-2 p-2 border border-gray-600 rounded-md "
+                  aria-describedby="loginError"
+                  
                 />
                 {touched.login && errors.login && (
                   <div className="text-red-500 text-[12px] -mt-2">{errors.login}</div>
@@ -97,7 +101,8 @@ export default function FormLogin() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="py-1 px-2 w-full bg-gray-600 text-white tsxt-sm rounded-md disabled:bg-gray-400"
+                  className="py-1 px-2 w-full  rounded-md  transition disabled:opacity-50"
+
                 >
                   {isSubmitting ? "Loading ..." : "Sign in"}
                 </button>

@@ -16,16 +16,17 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  username     String   @unique
-  email        String   @unique
-  password     String
-  avatar       String?
-  isVerified   Boolean  @default(false)
-  role         Role     @default(CUSTOMER)
-  referralCode String?  @unique
-  referredBy   String? // kode referral
-  createdAt    DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  username        String   @unique
+  email           String   @unique
+  password        String
+  avatar          String?
+  isVerified      Boolean  @default(false)
+  role            Role     @default(CUSTOMER)
+  referralCode    String?  @unique
+  referredBy      Int? // kolom baru dengan tipe Int?
+  referredBy_temp String? // kolom lama, jangan dihapus dulu  
+  createdAt       DateTime @default(now())
 
   events        Event[]        @relation("OrganizedEvents")
   registrations Registration[]
