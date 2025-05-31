@@ -9,8 +9,11 @@ import * as yup from "yup";
 const EventSchema = yup.object().shape({
   organizerId: yup.string().required("Organizer ID is required"),
   title: yup.string().required("Title is required"),
-  description: yup.string(),
-  location: yup.string().required("Location is required"),
+  description: yup.string().required("Description is required"),
+  locationId: yup
+    .number()
+    .required("Location is required")
+    .notOneOf([0], "Please select a valid location"),
   startDate: yup.date().required("Start date is required"),
   endDate: yup.date().required("End date is required"),
   isPaid: yup.boolean().required("Please specify if the event is paid"),
@@ -19,8 +22,14 @@ const EventSchema = yup.object().shape({
     then: (schema) => schema.required("Price is required"),
     otherwise: (schema) => schema.nullable(),
   }),
-  totalSeats: yup.number().required("Total seats is required"),
-  categoryId: yup.number().required("Category is required"),
+  totalSeats: yup
+    .number()
+    .required("Total seats is required")
+    .moreThan(0, "Total seats must be greater than 0"),
+  categoryId: yup
+    .number()
+    .required("Category is required")
+    .notOneOf([0], "Please select a valid category"),
   ticketTypes: yup.array(),
   promotions: yup.array(),
 });
@@ -39,7 +48,7 @@ interface IEventForm {
   organizerId: string;
   title: string;
   description?: string;
-  location?: string;
+  locationId: number;
   startDate: string;
   endDate: string;
   price?: number;
@@ -58,31 +67,26 @@ export default function FormCreateEvent() {
     organizerId: "",
     title: "",
     description: "",
-    location: "",
+    locationId: 0,
     startDate: "",
     endDate: "",
     price: undefined,
     isPaid: false,
-    totalSeats: 0,
+    totalSeats: 1,
     categoryId: 0,
     ticketTypes: [],
     promotions: [],
   };
 
-  const onCreateEvent = async (
+  const touchAllFields = (
     values: IEventForm,
-    actions: FormikHelpers<IEventForm>
+    setTouched: FormikHelpers<IEventForm>["setTouched"]
   ) => {
-    try {
-      await axios.post("/event", values);
-      toast.success("Event created successfully");
-      actions.resetForm();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to create event");
-    } finally {
-      actions.setSubmitting(false);
-    }
+    const touchedFields: Record<string, boolean> = {};
+    Object.keys(values).forEach((key) => {
+      touchedFields[key] = true;
+    });
+    setTouched(touchedFields, true);
   };
 
   useEffect(() => {
@@ -114,13 +118,36 @@ export default function FormCreateEvent() {
       <Formik
         initialValues={initialValues}
         validationSchema={EventSchema}
-        onSubmit={onCreateEvent}
+        onSubmit={async (values, actions) => {
+          try {
+            await axios.post("/event", values);
+            toast.success("Event created successfully");
+            actions.resetForm();
+          } catch (err) {
+            console.error(err);
+            toast.error("Failed to create event 456");
+            touchAllFields(values, actions.setTouched);
+          } finally {
+            actions.setSubmitting(false);
+          }
+        }}
       >
         {(props: FormikProps<IEventForm>) => {
-          const { touched, errors, isSubmitting, values } = props;
+          const { touched, errors, isSubmitting, values, setFieldValue } = props;
 
           return (
             <Form className="space-y-4">
+              <div className="flex flex-col">
+                <label>Organizer ID</label>
+                <Field
+                  name="organizerId"
+                  className="mb-2 p-2 border border-gray-600 rounded-md"
+                />
+                {touched.organizerId && errors.organizerId && (
+                  <div className="text-red-500 text-xs">{errors.organizerId}</div>
+                )}
+              </div>
+
               <div className="flex flex-col">
                 <label>Title</label>
                 <Field
@@ -138,24 +165,27 @@ export default function FormCreateEvent() {
                   name="description"
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 />
+                {touched.description && errors.description && (
+                  <div className="text-red-500 text-xs">{errors.description}</div>
+                )}
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="location">Location</label>
+                <label htmlFor="locationId">Location</label>
                 <Field
                   as="select"
-                  name="location"
+                  name="locationId"
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 >
-                  <option value="">-- Select Location --</option>
+                  <option value="0">-- Select Location --</option>
                   {locations.map((location) => (
-                    <option key={location.id} value={location.name}>
+                    <option key={location.id} value={location.id}>
                       {location.name}
                     </option>
                   ))}
                 </Field>
-                {touched.location && errors.location && (
-                  <div className="text-red-500 text-xs">{errors.location}</div>
+                {touched.locationId && errors.locationId && (
+                  <div className="text-red-500 text-xs">{errors.locationId}</div>
                 )}
               </div>
 
@@ -166,6 +196,9 @@ export default function FormCreateEvent() {
                   type="datetime-local"
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 />
+                {touched.startDate && errors.startDate && (
+                  <div className="text-red-500 text-xs">{errors.startDate}</div>
+                )}
               </div>
 
               <div className="flex flex-col">
@@ -175,6 +208,9 @@ export default function FormCreateEvent() {
                   type="datetime-local"
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 />
+                {touched.endDate && errors.endDate && (
+                  <div className="text-red-500 text-xs">{errors.endDate}</div>
+                )}
               </div>
 
               <div className="flex flex-col">
@@ -184,6 +220,9 @@ export default function FormCreateEvent() {
                   type="number"
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 />
+                {touched.totalSeats && errors.totalSeats && (
+                  <div className="text-red-500 text-xs">{errors.totalSeats}</div>
+                )}
               </div>
 
               <div className="flex flex-col">
@@ -193,7 +232,7 @@ export default function FormCreateEvent() {
                   name="categoryId"
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 >
-                  <option value="">-- Select Category --</option>
+                  <option value="0">-- Select Category --</option>
                   {categories.map((category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
@@ -204,18 +243,24 @@ export default function FormCreateEvent() {
                   <div className="text-red-500 text-xs">{errors.categoryId}</div>
                 )}
               </div>
-{/* 
+
               <div className="flex flex-col">
                 <label>Is Paid</label>
                 <Field
-                  name="isPaid"
                   as="select"
+                  name="isPaid"
                   className="mb-2 p-2 border border-gray-600 rounded-md"
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setFieldValue("isPaid", e.target.value === "true")
+                  }
                 >
-                  <option value={false}>Free</option>
-                  <option value={true}>Paid</option>
+                  <option value="false">Free</option>
+                  <option value="true">Paid</option>
                 </Field>
-              </div> */}
+                {touched.isPaid && errors.isPaid && (
+                  <div className="text-red-500 text-xs">{errors.isPaid}</div>
+                )}
+              </div>
 
               {values.isPaid && (
                 <div className="flex flex-col">
