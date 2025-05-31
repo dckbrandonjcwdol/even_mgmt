@@ -71,7 +71,7 @@ export default function FormCreateEvent() {
     startDate: "",
     endDate: "",
     price: undefined,
-    isPaid: false,
+    isPaid: true,
     totalSeats: 1,
     categoryId: 0,
     ticketTypes: [],
@@ -125,7 +125,7 @@ export default function FormCreateEvent() {
             actions.resetForm();
           } catch (err) {
             console.error(err);
-            toast.error("Failed to create event 456");
+            toast.error("Failed to create event (fe)");
             touchAllFields(values, actions.setTouched);
           } finally {
             actions.setSubmitting(false);

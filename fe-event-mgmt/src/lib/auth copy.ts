@@ -3,7 +3,6 @@ import Credentials from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
 
 interface User extends NextAuthUser {
-  id: string;
   username: string;
   avatar: string;
   userToken: string;
@@ -17,7 +16,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (!credentials) return null;
 
         const user: User = {
-          id: credentials.id as string,
           name: credentials.username as string, // digunakan untuk session
           username: credentials.username as string,
           email: credentials.email as string,
@@ -40,7 +38,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
         token.name = user.username;
         token.username = user.username;
         token.email = user.email;
@@ -51,22 +48,19 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           // const decoded: any = jwtDecode(user.userToken);
           const decoded: any = jwtDecode(user.userToken as string);
 
-          token.id = decoded.id || null;
+          
           token.role = decoded.role || null;
         } catch (error) {
           console.error("Failed to decode JWT:", error);
           token.role = null;
-          token.id = 0;
         }
       }
       return token;
     },
     async session({ token, session }) {
-      // const uid = token.id as number;
       session.user = {
         ...session.user,
         name: typeof token.name === "string" ? token.name : (token.username as string),
-        id: token.id as string | null,
         email: token.email as string,
         avatar: token.avatar as string,
         role: token.role as string | null,
