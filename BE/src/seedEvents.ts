@@ -18,20 +18,19 @@ interface EventPayload {
   organizerId: number;
   title: string;
   description: string;
-  locationId: number; // ubah dari string ke number (foreign key)
+  locationId: number;
   startDate: string;
   endDate: string;
   isPaid: boolean;
   price: number;
   totalSeats: number;
-  category: string;
+  categoryId: number; // sudah dikoreksi
   ticketTypes: TicketType[];
   promotions: Promotion[];
 }
 
 const baseUrl = 'http://localhost:8000/api/event';
 
-// Asumsikan ID lokasi sudah ada di DB dan diketahui
 const locationOptions = [
   { id: 1, name: 'JCC Senayan' },
   { id: 2, name: 'Balai Kartini' },
@@ -51,6 +50,7 @@ const locationOptions = [
   { id: 16, name: 'Pakuwon Mall' },
 ];
 
+
 const titles = [
   'Tech Future 2025',
   'Music & AI Fusion',
@@ -63,6 +63,7 @@ const titles = [
   'AI in Music Experience',
   'Quantum Tech Talk',
 ];
+
 
 const descriptions = [
   'Sebuah perayaan inovasi dan teknologi masa depan.',
@@ -77,6 +78,7 @@ const descriptions = [
   'Pembicaraan mendalam tentang quantum computing.',
 ];
 
+
 function getRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
 }
@@ -89,24 +91,16 @@ async function sendEvents() {
       organizerId: 1,
       title: `${getRandom(titles)} #${i}`,
       description: getRandom(descriptions),
-      locationId: location.id, // gunakan ID lokasi dari tabel
+      locationId: location.id,
       startDate: '2025-06-01T09:00:00Z',
       endDate: '2025-06-02T17:00:00Z',
       isPaid: true,
       price: 500000,
       totalSeats: 100,
-      category: 'Technology',
+      categoryId: 1, // asumsi ID 1 untuk "Technology"
       ticketTypes: [
-        {
-          name: 'Regular',
-          price: 500000,
-          quota: 80,
-        },
-        {
-          name: 'VIP',
-          price: 1000000,
-          quota: 20,
-        },
+        { name: 'Regular', price: 500000, quota: 80 },
+        { name: 'VIP', price: 1000000, quota: 20 },
       ],
       promotions: [
         {
