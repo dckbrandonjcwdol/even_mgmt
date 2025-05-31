@@ -10,30 +10,20 @@ const EventSchema = yup.object().shape({
   organizerId: yup.string().required("Organizer ID is required"),
   title: yup.string().required("Title is required"),
   description: yup.string(),
-  location: yup.string().required("Location is required"),
+  location: yup.string(),
   startDate: yup.date().required("Start date is required"),
   endDate: yup.date().required("End date is required"),
-  isPaid: yup.boolean().required("Please specify if the event is paid"),
+  isPaid: yup.boolean().required(),
   price: yup.number().when("isPaid", {
     is: true,
     then: (schema) => schema.required("Price is required"),
     otherwise: (schema) => schema.nullable(),
   }),
   totalSeats: yup.number().required("Total seats is required"),
-  categoryId: yup.number().required("Category is required"),
+  category: yup.string(),
   ticketTypes: yup.array(),
   promotions: yup.array(),
 });
-
-interface ILocation {
-  id: number;
-  name: string;
-}
-
-interface ICategory {
-  id: number;
-  name: string;
-}
 
 interface IEventForm {
   organizerId: string;
@@ -45,14 +35,15 @@ interface IEventForm {
   price?: number;
   isPaid: boolean;
   totalSeats: number;
-  categoryId: number;
+  category?: string;
   ticketTypes?: any[];
   promotions?: any[];
 }
 
+
+
 export default function FormCreateEvent() {
-  const [locations, setLocations] = useState<ILocation[]>([]);
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [locations, setLocations] =  useState<string[]>([]);
 
   const initialValues: IEventForm = {
     organizerId: "",
@@ -64,7 +55,7 @@ export default function FormCreateEvent() {
     price: undefined,
     isPaid: false,
     totalSeats: 0,
-    categoryId: 0,
+    category: "",
     ticketTypes: [],
     promotions: [],
   };
@@ -74,7 +65,7 @@ export default function FormCreateEvent() {
     actions: FormikHelpers<IEventForm>
   ) => {
     try {
-      await axios.post("/event", values);
+      await axios.post("/event", values); // Sesuaikan endpoint sesuai routing kamu
       toast.success("Event created successfully");
       actions.resetForm();
     } catch (err) {
@@ -88,25 +79,16 @@ export default function FormCreateEvent() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const res = await axios.get("/locations");
+        const res = await axios.get("/locations"); // pastikan endpoint ini sesuai
         setLocations(res.data);
       } catch (err) {
         console.error("Failed to load locations:", err);
       }
     };
 
-    const fetchCategories = async () => {
-      try {
-        const res = await axios.get("/categories");
-        setCategories(res.data);
-      } catch (err) {
-        console.error("Failed to load categories:", err);
-      }
-    };
-
     fetchLocations();
-    fetchCategories();
   }, []);
+
 
   return (
     <div className="max-w-md mx-auto mt-8 p-4 border rounded-md shadow-md">
@@ -117,31 +99,59 @@ export default function FormCreateEvent() {
         onSubmit={onCreateEvent}
       >
         {(props: FormikProps<IEventForm>) => {
-          const { touched, errors, isSubmitting, values } = props;
+          const { touched, errors, isSubmitting } = props;
 
           return (
             <Form className="space-y-4">
-              <div className="flex flex-col">
-                <label>Title</label>
-                <Field
-                  name="title"
+               {/* <div className="flex flex-col">
+                <label>Organizer ID</label>
+                <Field 
+                  name="organizerId" 
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 />
-                {touched.title && errors.title && (
-                  <div className="text-red-500 text-xs">{errors.title}</div>
+                {touched.organizerId && errors.organizerId && (
+                  <div className="text-red-500 text-[12px] -mt-2 mb-2">{errors.organizerId}</div>
                 )}
+              </div> */}
+
+             <div className="flex flex-col">
+                <label>Title</label>
+                <Field 
+                  name="title" 
+                  className="mb-2 p-2 border border-gray-600 rounded-md"
+                />
               </div>
 
               <div className="flex flex-col">
                 <label>Description</label>
-                <Field
-                  name="description"
+                <Field 
+                  name="description" 
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 />
               </div>
 
+              {/* <div className="flex flex-col">
+                <label>Location</label>
+                <Field 
+                  name="location" 
+                  className="mb-2 p-2 border border-gray-600 rounded-md" 
+                />
+              </div> */}
+
               <div className="flex flex-col">
-                <label htmlFor="location">Location</label>
+                <label htmlFor="location" className="text-md">Location</label>
+                {/* <Field
+                  as="select"
+                  name="locationId"
+                  className="mb-2 p-2 border border-gray-600 rounded-md"
+                >
+                  <option value="">-- Select Location --</option>
+                  {locations.map((location) => (
+                    <option key={location.id} value={location.name}>
+                      {location}
+                    </option>
+                  ))}
+                </Field> */}
                 <Field
                   as="select"
                   name="location"
@@ -153,81 +163,65 @@ export default function FormCreateEvent() {
                       {location.name}
                     </option>
                   ))}
-                </Field>
+                </Field>                
                 {touched.location && errors.location && (
-                  <div className="text-red-500 text-xs">{errors.location}</div>
+                  <div className="text-red-500 text-[12px] -mt-2 mb-2">{errors.location}</div>
                 )}
               </div>
 
+
+
               <div className="flex flex-col">
                 <label>Start Date</label>
-                <Field
-                  name="startDate"
-                  type="datetime-local"
-                  className="mb-2 p-2 border border-gray-600 rounded-md"
+                <Field 
+                  name="startDate" 
+                  type="datetime-local"                   
+                  className="mb-2 p-2 border border-gray-600 rounded-md" 
                 />
               </div>
 
               <div className="flex flex-col">
                 <label>End Date</label>
-                <Field
-                  name="endDate"
-                  type="datetime-local"
-                  className="mb-2 p-2 border border-gray-600 rounded-md"
+                <Field 
+                  name="endDate" 
+                  type="datetime-local" 
+                  className="mb-2 p-2 border border-gray-600 rounded-md" 
                 />
               </div>
 
               <div className="flex flex-col">
                 <label>Total Seats</label>
-                <Field
-                  name="totalSeats"
-                  type="number"
-                  className="mb-2 p-2 border border-gray-600 rounded-md"
+                <Field 
+                  name="totalSeats" 
+                  type="number" 
+                  className="mb-2 p-2 border border-gray-600 rounded-md" 
                 />
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="categoryId">Category</label>
-                <Field
-                  as="select"
-                  name="categoryId"
-                  className="mb-2 p-2 border border-gray-600 rounded-md"
-                >
-                  <option value="">-- Select Category --</option>
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </Field>
-                {touched.categoryId && errors.categoryId && (
-                  <div className="text-red-500 text-xs">{errors.categoryId}</div>
-                )}
+                <label>Category</label>
+                <Field 
+                  name="category" 
+                  className="mb-2 p-2 border border-gray-600 rounded-md" 
+                />
               </div>
-{/* 
-              <div className="flex flex-col">
+
+              {/* <div className="flex flex-col">
                 <label>Is Paid</label>
-                <Field
-                  name="isPaid"
-                  as="select"
-                  className="mb-2 p-2 border border-gray-600 rounded-md"
-                >
+                <Field name="isPaid" as="select" className="input">
                   <option value={false}>Free</option>
                   <option value={true}>Paid</option>
                 </Field>
               </div> */}
 
-              {values.isPaid && (
+              {props.values.isPaid && (
                 <div className="flex flex-col">
                   <label>Price</label>
-                  <Field
-                    name="price"
-                    type="number"
-                    className="mb-2 p-2 border border-gray-600 rounded-md"
+                  <Field 
+                    name="price" 
+                    type="number" 
+                    className="mb-2 p-2 border border-gray-600 rounded-md" 
                   />
-                  {touched.price && errors.price && (
-                    <div className="text-red-500 text-xs">{errors.price}</div>
-                  )}
                 </div>
               )}
 

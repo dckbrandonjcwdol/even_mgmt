@@ -42,5 +42,9 @@
     "nodemailer": "^7.0.3",
     "prisma": "^6.8.2",
     "streamifier": "^0.1.1"
-  }
+  },
+
+  "prisma": {
+    "seed": "ts-node prisma/seedingRef.ts"
+  }  
 }

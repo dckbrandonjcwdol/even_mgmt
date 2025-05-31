@@ -27,7 +27,7 @@ model User {
   referredBy   Int? // kolom baru dengan tipe Int?
   createdAt    DateTime @default(now())
 
-  events        Event[]        @relation("OrganizedEvents")
+  events        Event[]        @relation("UserOrganizedEvents") // relasi ke Event
   registrations Registration[]
   reviews       Review[]
   points        Point[]
@@ -45,11 +45,14 @@ model email_verifications {
 }
 
 model Event {
-  id             Int      @id @default(autoincrement())
-  organizerId    Int
-  title          String
-  description    String
-  location       Location
+  id          Int    @id @default(autoincrement())
+  organizerId Int
+  title       String
+  description String
+
+  locationId Int
+  location   Location @relation(fields: [locationId], references: [id])
+
   startDate      DateTime
   endDate        DateTime
   price          Int?
@@ -59,11 +62,17 @@ model Event {
   category       String
   createdAt      DateTime @default(now())
 
-  organizer     User           @relation("OrganizedEvents", fields: [organizerId], references: [id])
+  organizer     User           @relation("UserOrganizedEvents", fields: [organizerId], references: [id])
   ticketTypes   TicketType[]
   registrations Registration[]
   reviews       Review[]
   promotions    Promotion[]
+}
+
+model Location {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  events Event[]
 }
 
 model TicketType {
@@ -164,25 +173,4 @@ enum RegistrationStatus {
   PENDING
   PAID
   CANCELLED
-}
-
-enum Location {
-  JCCSenayan
-  BalaiKartini
-  TheKasablankaHall
-  ICEBSD
-  HotelMulia
-  DjakartaTheater
-
-  TransConventionCenter
-  Sabuga
-  HarrisCiumbuleuit
-  EldoradoDago
-  PullmanHotelBandung
-
-  GrandCityConvex
-  DyandraConvention
-  CiputraWorldSurabaya
-  ShangriLaSurabaya
-  PakuwonMall
 }

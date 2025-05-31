@@ -11,6 +11,7 @@ export class EventRouter {
     // this.router.get("/events", this.eventController.getEvents);
     this.router.post("/event", this.eventController.createEvent);
     this.router.get("/locations", this.eventController.getLocation);
+    this.router.get("/categories", this.eventController.getCategory);
     // this.router.post("/event-create", this.eventController.createEventHandler);
   }
 

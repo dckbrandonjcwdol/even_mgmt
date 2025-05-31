@@ -59,8 +59,10 @@ model Event {
   isPaid         Boolean  @default(false)
   totalSeats     Int
   availableSeats Int
-  category       String
-  createdAt      DateTime @default(now())
+  categoryId     Int
+  category       Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
 
   organizer     User           @relation("UserOrganizedEvents", fields: [organizerId], references: [id])
   ticketTypes   TicketType[]
@@ -70,6 +72,12 @@ model Event {
 }
 
 model Location {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  events Event[]
+}
+
+model Category {
   id     Int     @id @default(autoincrement())
   name   String  @unique
   events Event[]

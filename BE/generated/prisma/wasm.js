@@ -153,11 +153,16 @@ exports.Prisma.EventScalarFieldEnum = {
   isPaid: 'isPaid',
   totalSeats: 'totalSeats',
   availableSeats: 'availableSeats',
-  category: 'category',
+  categoryId: 'categoryId',
   createdAt: 'createdAt'
 };
 
 exports.Prisma.LocationScalarFieldEnum = {
+  id: 'id',
+  name: 'name'
+};
+
+exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name'
 };
@@ -258,6 +263,7 @@ exports.Prisma.ModelName = {
   email_verifications: 'email_verifications',
   Event: 'Event',
   Location: 'Location',
+  Category: 'Category',
   TicketType: 'TicketType',
   Registration: 'Registration',
   Review: 'Review',

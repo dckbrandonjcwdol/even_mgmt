@@ -16,7 +16,7 @@ export class EventController{
             isPaid,
             price,
             totalSeats,
-            category,
+            categoryId,
             ticketTypes,
             promotions
             } = req.body;
@@ -33,7 +33,7 @@ export class EventController{
                 price: isPaid ? price : null,
                 totalSeats,
                 availableSeats: totalSeats,
-                category: category || "",
+                categoryId: parseInt(categoryId),
                 ticketTypes: {
                 create: ticketTypes?.map((ticket: any) => ({
                     name: ticket.name,
@@ -63,8 +63,18 @@ export class EventController{
 
     async getLocation(req: Request, res: Response) {
         try {
-            const location = Object.values(Location).slice(1);
+            const location = await prisma.location.findMany();
             res.status(200).json(location);
+        }catch(err){
+            console.log(err);
+            res.status(400).send({ error: 'Failed to get locations', detail: err });
+        }     
+    }
+
+    async getCategory(req: Request, res: Response) {
+        try {
+            const categories = await prisma.category.findMany();
+            res.status(200).json(categories);
         }catch(err){
             console.log(err);
             res.status(400).send({ error: 'Failed to get locations', detail: err });
