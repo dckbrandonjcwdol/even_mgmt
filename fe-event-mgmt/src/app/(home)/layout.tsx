@@ -8,8 +8,8 @@ export default async function HomeLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-console.log(session?.user?.role); // 'user', 'admin', dsb
-console.log(session?.userToken);  // JWT
+  console.log(session?.user?.role); // 'user', 'admin', dsb
+  console.log(session?.userToken);  // JWT
   
   console.log("SESSION:", JSON.stringify(session, null, 2)); // tampil rapi
 
