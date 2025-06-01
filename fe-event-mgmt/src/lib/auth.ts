@@ -17,7 +17,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (!credentials) return null;
 
         const user: User = {
-          id: credentials.id as string,
+          id: credentials.id as number,
           name: credentials.username as string, // digunakan untuk session
           username: credentials.username as string,
           email: credentials.email as string,
@@ -51,7 +51,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           // const decoded: any = jwtDecode(user.userToken);
           const decoded: any = jwtDecode(user.userToken as string);
 
-          token.id = decoded.id || null;
+          token.id = decoded.id || 0;
           token.role = decoded.role || null;
         } catch (error) {
           console.error("Failed to decode JWT:", error);
@@ -66,7 +66,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       session.user = {
         ...session.user,
         name: typeof token.name === "string" ? token.name : (token.username as string),
-        id: token.id as string | null,
+        id: `${token.id ?? ""}`, 
         email: token.email as string,
         avatar: token.avatar as string,
         role: token.role as string | null,

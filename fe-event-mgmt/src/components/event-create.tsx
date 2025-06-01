@@ -10,10 +10,7 @@ const EventSchema = yup.object().shape({
   organizerId: yup.string().required("Organizer ID is required"),
   title: yup.string().required("Title is required"),
   description: yup.string().required("Description is required"),
-  locationId: yup
-    .number()
-    .required("Location is required")
-    .notOneOf([0], "Please select a valid location"),
+  locationId: yup.number().required("Location is required").notOneOf([0], "Please select a valid location"),
   startDate: yup.date().required("Start date is required"),
   endDate: yup.date().required("End date is required"),
   isPaid: yup.boolean().required("Please specify if the event is paid"),
@@ -22,14 +19,8 @@ const EventSchema = yup.object().shape({
     then: (schema) => schema.required("Price is required"),
     otherwise: (schema) => schema.nullable(),
   }),
-  totalSeats: yup
-    .number()
-    .required("Total seats is required")
-    .moreThan(0, "Total seats must be greater than 0"),
-  categoryId: yup
-    .number()
-    .required("Category is required")
-    .notOneOf([0], "Please select a valid category"),
+  totalSeats: yup.number().required("Total seats is required").moreThan(0, "Total seats must be greater than 0"),
+  categoryId: yup.number().required("Category is required").notOneOf([0], "Please select a valid category"),
   ticketTypes: yup.array(),
   promotions: yup.array(),
 });
@@ -42,6 +33,15 @@ interface ILocation {
 interface ICategory {
   id: number;
   name: string;
+}
+
+interface IOrganizer {
+  id: number;
+  name: string;
+}
+
+interface Props {
+  organizerId: string;
 }
 
 interface IEventForm {
@@ -59,12 +59,46 @@ interface IEventForm {
   promotions?: any[];
 }
 
-export default function FormCreateEvent() {
+export default function FormCreateEvent({ organizerId }: Props) {
   const [locations, setLocations] = useState<ILocation[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
+  const [organizer, setOrganizer] = useState<IOrganizer | null>(null);
+
+  console.log("RENDERED COMPONENT - organizerId:", organizerId); // ✅ tambahkan ini
+
+  useEffect(() => {
+    console.log("USEEFFECT organizerId:", organizerId);
+  }, [organizerId]);
+  
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const [locationsRes, categoriesRes] = await Promise.all([
+          axios.get("/locations"),
+          axios.get("/categories"),
+        ]);
+        setLocations(locationsRes.data);
+        setCategories(categoriesRes.data);
+      } catch (err) {
+        console.error("Failed to load initial data:", err);
+      }
+    };
+    fetchInitialData();
+  }, []);
+
+  const touchAllFields = (
+    values: IEventForm,
+    setTouched: FormikHelpers<IEventForm>["setTouched"]
+  ) => {
+    const touchedFields: Record<string, boolean> = {};
+    Object.keys(values).forEach((key) => {
+      touchedFields[key] = true;
+    });
+    setTouched(touchedFields, true);
+  };
 
   const initialValues: IEventForm = {
-    organizerId: "",
+    organizerId,
     title: "",
     description: "",
     locationId: 0,
@@ -78,45 +112,13 @@ export default function FormCreateEvent() {
     promotions: [],
   };
 
-  const touchAllFields = (
-    values: IEventForm,
-    setTouched: FormikHelpers<IEventForm>["setTouched"]
-  ) => {
-    const touchedFields: Record<string, boolean> = {};
-    Object.keys(values).forEach((key) => {
-      touchedFields[key] = true;
-    });
-    setTouched(touchedFields, true);
-  };
-
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const res = await axios.get("/locations");
-        setLocations(res.data);
-      } catch (err) {
-        console.error("Failed to load locations:", err);
-      }
-    };
-
-    const fetchCategories = async () => {
-      try {
-        const res = await axios.get("/categories");
-        setCategories(res.data);
-      } catch (err) {
-        console.error("Failed to load categories:", err);
-      }
-    };
-
-    fetchLocations();
-    fetchCategories();
-  }, []);
-
   return (
     <div className="max-w-md mx-auto mt-8 p-4 border rounded-md shadow-md">
       <h2 className="text-xl font-semibold mb-4">Create New Event</h2>
+
       <Formik
         initialValues={initialValues}
+        enableReinitialize
         validationSchema={EventSchema}
         onSubmit={async (values, actions) => {
           try {
@@ -125,7 +127,7 @@ export default function FormCreateEvent() {
             actions.resetForm();
           } catch (err) {
             console.error(err);
-            toast.error("Failed to create event (fe)");
+            toast.error("Failed to create event");
             touchAllFields(values, actions.setTouched);
           } finally {
             actions.setSubmitting(false);
@@ -137,17 +139,9 @@ export default function FormCreateEvent() {
 
           return (
             <Form className="space-y-4">
-              <div className="flex flex-col">
-                <label>Organizer ID</label>
-                <Field
-                  name="organizerId"
-                  className="mb-2 p-2 border border-gray-600 rounded-md"
-                />
-                {touched.organizerId && errors.organizerId && (
-                  <div className="text-red-500 text-xs">{errors.organizerId}</div>
-                )}
-              </div>
-
+              <Field type="hidden" name="organizerId" />
+              {/* Tambahkan field lain di sini */}
+              {/* Contoh: */}
               <div className="flex flex-col">
                 <label>Title</label>
                 <Field
@@ -276,15 +270,13 @@ export default function FormCreateEvent() {
                 </div>
               )}
 
-              <div className="mt-4">
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="bg-blue-600 text-white px-4 py-2 rounded"
-                >
-                  {isSubmitting ? "Creating..." : "Create Event"}
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                {isSubmitting ? "Submitting..." : "Create Event"}
+              </button>
             </Form>
           );
         }}
