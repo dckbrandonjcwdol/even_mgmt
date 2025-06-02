@@ -2,6 +2,7 @@
 
 import axios from "@/lib/axios";
 import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import * as yup from "yup";
@@ -35,10 +36,6 @@ interface ICategory {
   name: string;
 }
 
-interface IOrganizer {
-  id: number;
-  name: string;
-}
 
 interface Props {
   organizerId: string;
@@ -55,14 +52,14 @@ interface IEventForm {
   isPaid: boolean;
   totalSeats: number;
   categoryId: number;
-  ticketTypes?: any[];
-  promotions?: any[];
+  ticketTypes?: unknown[];
+  promotions?: unknown[];
 }
 
 export default function FormCreateEvent({ organizerId }: Props) {
   const [locations, setLocations] = useState<ILocation[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [organizer, setOrganizer] = useState<IOrganizer | null>(null);
+  const router = useRouter();
 
   console.log("RENDERED COMPONENT - organizerId:", organizerId); // ✅ tambahkan ini
 
@@ -125,6 +122,7 @@ export default function FormCreateEvent({ organizerId }: Props) {
             await axios.post("/event", values);
             toast.success("Event created successfully");
             actions.resetForm();
+            router.push("/");
           } catch (err) {
             console.error(err);
             toast.error("Failed to create event");
@@ -140,8 +138,7 @@ export default function FormCreateEvent({ organizerId }: Props) {
           return (
             <Form className="space-y-4">
               <Field type="hidden" name="organizerId" />
-              {/* Tambahkan field lain di sini */}
-              {/* Contoh: */}
+
               <div className="flex flex-col">
                 <label>Title</label>
                 <Field

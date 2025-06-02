@@ -1,7 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const categories = [
   { name: "Music", icon: "🎤" },
@@ -34,8 +34,10 @@ const HeroSection = () => {
           return {
             title: keyword.toUpperCase(),
             subtitle: "DISCOVER NOW",
-            // cta: `Explore ${keyword}`,
+            cta: `Explore ${keyword}`,  // 👈 Fix added here
             image: data.urls?.regular || "",
+            width: data.width || 1200,
+            height: data.height || 600,            
           };
         })
       );
@@ -56,16 +58,15 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, [slides]);
 
-  const handlePrev = () => setSlide((s) => (s === 0 ? slides.length - 1 : s - 1));
-  const handleNext = () => setSlide((s) => (s === slides.length - 1 ? 0 : s + 1));
 
   return (
     <div className="w-full max-w-screen-xl mx-auto px-4 py-6">
       {slides.length > 0 ? (
         <div className="relative overflow-hidden rounded-xl">
-          <img
+          <Image
             src={slides[slide].image}
             alt="Hero"
+            fill
             className="w-full h-[400px] object-cover transition-all duration-500"
           />
           <div className="absolute inset-0 bg-black/40 flex flex-col justify-center p-6 md:p-12 text-white">

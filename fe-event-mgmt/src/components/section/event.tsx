@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React from "react";
 
 const tabs = [
@@ -82,9 +83,10 @@ const EventSection = () => {
             className="bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
           >
             <div className="relative">
-              <img
+              <Image
                 src={event.image}
                 alt={event.title}
+                fill
                 className="w-full h-[160px] object-cover"
               />
               {event.badge && (

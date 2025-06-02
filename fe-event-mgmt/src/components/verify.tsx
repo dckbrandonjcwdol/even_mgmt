@@ -2,12 +2,13 @@
 
 import axios from "@/lib/axios";
 import { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function VerifyPage({ token }: { token: string }) {
   const [msg, setMsg] = useState<string>("");
-  const onVerify = async () => {
+
+  const onVerify = useCallback(async () => {
     try {
       setMsg("Waiting ...");
       const { data } = await axios.patch(
@@ -27,11 +28,11 @@ export default function VerifyPage({ token }: { token: string }) {
         setMsg("Verification Failed!");
       }
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     onVerify();
-  }, []);
+  }, [onVerify]);
 
   return (
     <div className="flex w-full h-screen justify-center items-center perspective-1000 bg-white">
@@ -48,7 +49,6 @@ export default function VerifyPage({ token }: { token: string }) {
           {msg}
         </span>
       </div>
-    </div>    
-
+    </div>
   );
 }

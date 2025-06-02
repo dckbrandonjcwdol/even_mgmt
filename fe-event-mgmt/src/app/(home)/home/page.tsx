@@ -1,11 +1,7 @@
 import DestinationSection from "@/components/section/destinations";
 import EventSection from "@/components/section/event";
 import HeroSection from "@/components/section/hero";
-import Sidebar from "@/components/sidebar";
 import Wrapper from "@/components/wrapper";
-import { auth } from "@/lib/auth";
-
-import { redirect } from "next/navigation";
 
 export default async function Home() {
 

@@ -1,8 +1,9 @@
 "use client";
 
 import axios from "@/lib/axios";
-import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
-import { useEffect, useState  } from "react";
+import { Field, Form, Formik, FormikHelpers, FormikProps, useFormikContext } from "formik";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 
@@ -29,12 +30,31 @@ interface IRegisterForm {
   referralCode: string;
 }
 
+// Referral code validator component
+const ReferralCodeValidator = ({
+  validateReferralCode
+}: {
+  validateReferralCode: (code: string) => void;
+}) => {
+  const { values } = useFormikContext<IRegisterForm>();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      validateReferralCode(values.referralCode);
+    }, 500); // debounce
+
+    return () => clearTimeout(timeout);
+  }, [values.referralCode, validateReferralCode]);
+
+  return null;
+};
+
 export default function FormRegister() {
-  const [roles, setRoles] =  useState<string[]>([]);
+  const [roles, setRoles] = useState<string[]>([]);
   const [referralValid, setReferralValid] = useState<boolean | null>(null);
   const [referralChecking, setReferralChecking] = useState(false);
-
-  // Fungsi untuk validasi referral
+  const router = useRouter();
+  // Validate referral code function
   const validateReferralCode = async (code: string) => {
     if (!code) {
       setReferralValid(null);
@@ -46,17 +66,17 @@ export default function FormRegister() {
       const res = await axios.get(`/auth/referral-validate?code=${code}`);
       setReferralValid(res.data.valid);
     } catch (err) {
+      console.error("Referral validation error:", err);
       setReferralValid(false);
     } finally {
       setReferralChecking(false);
     }
-  };      
-          
+  };
 
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const res = await axios.get("/auth/role"); // pastikan endpoint ini sesuai
+        const res = await axios.get("/auth/role");
         setRoles(res.data);
       } catch (err) {
         console.error("Failed to load roles:", err);
@@ -66,7 +86,6 @@ export default function FormRegister() {
     fetchRoles();
   }, []);
 
-
   const initialValues: IRegisterForm = {
     username: "",
     email: "",
@@ -74,22 +93,6 @@ export default function FormRegister() {
     role: "",
     referralCode: ""
   };
-
-  // const onRegister = async (
-  //   value: IRegisterForm,
-  //   action: FormikHelpers<IRegisterForm>
-  // ) => {
-  //   try {
-  //     // await axios.post("/users/register", value);
-  //     await axios.post("/auth/register", value);
-  //     toast.success("Register successfully");
-  //     action.resetForm();
-  //   } catch (err) {
-  //     console.log(err);
-  //     action.setSubmitting(false);
-  //     toast.error("Register failed");
-  //   }
-  // };
 
   const onRegister = async (
     value: IRegisterForm,
@@ -103,8 +106,10 @@ export default function FormRegister() {
       }
 
       await axios.post("/auth/register", value);
-      toast.success("Register successfully");
+      toast.success("Register successfully, please verify on your mailbox!");
       action.resetForm();
+      router.push("/");
+
     } catch (err) {
       console.log(err);
       action.setSubmitting(false);
@@ -113,7 +118,7 @@ export default function FormRegister() {
   };
 
   return (
-     <div className="max-w-md mx-auto mt-8 p-4 border rounded-md shadow-md">
+    <div className="max-w-md mx-auto mt-8 p-4 border rounded-md shadow-md">
       <h2 className="text-xl font-semibold mb-4">Sign Up</h2>
       <Formik
         initialValues={initialValues}
@@ -125,16 +130,11 @@ export default function FormRegister() {
         {(props: FormikProps<IRegisterForm>) => {
           const { touched, errors, isSubmitting } = props;
 
-          useEffect(() => {
-            const timeout = setTimeout(() => {
-              validateReferralCode(props.values.referralCode);
-            }, 500); // debounce agar tidak langsung trigger tiap ketik
-
-            return () => clearTimeout(timeout);
-          }, [props.values.referralCode]);
-          
           return (
             <Form>
+              {/* Include ReferralCodeValidator here */}
+              <ReferralCodeValidator validateReferralCode={validateReferralCode} />
+
               <div className="flex flex-col">
                 <label htmlFor="name" className="text-md">
                   Username
@@ -173,14 +173,14 @@ export default function FormRegister() {
                   className="mb-2 p-2 border border-gray-600 rounded-md"
                 />
                 {touched.password && errors.password && (
-                  <div className="text-red-500 text-[12px] -mt-2 mb-2">
-                    {errors.password}
-                  </div>
+                  <div className="text-red-500 text-[12px] -mt-2 mb-2">{errors.password}</div>
                 )}
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="role" className="text-md">Role</label>
+                <label htmlFor="role" className="text-md">
+                  Role
+                </label>
                 <Field
                   as="select"
                   name="role"
@@ -215,12 +215,11 @@ export default function FormRegister() {
                 )}
               </div>
 
-
               <div className="mt-12">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="py-1 px-2 w-full bg-gray-600 text-white tsxt-sm rounded-md disabled:bg-gray-400"
+                  className="py-1 px-2 w-full bg-gray-600 text-white text-sm rounded-md disabled:bg-gray-400"
                 >
                   {isSubmitting ? "Loading ..." : "Sign up"}
                 </button>

@@ -1,4 +1,4 @@
-import NextAuth, { User as NextAuthUser } from "next-auth";
+import NextAuth, { User as NextAuthUser, Session } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { jwtDecode } from "jwt-decode";
 
@@ -10,6 +10,20 @@ interface User extends NextAuthUser {
   role: string | null;
 }
 
+interface DecodedToken {
+  id: string | number;
+  role: string | null;
+}
+
+interface CustomSession extends Session {
+  user: Session["user"] & {
+    id: string;
+    avatar: string;
+    role: string | null;
+  };
+  userToken: string;
+}
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
@@ -18,7 +32,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
         const user: User = {
           id: credentials.id as string,
-          name: credentials.username as string, // digunakan untuk session
+          name: credentials.username as string,
           username: credentials.username as string,
           email: credentials.email as string,
           avatar: credentials.avatar as string,
@@ -35,7 +49,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   },
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60, // 1 hour
+    maxAge: 60 * 60,
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -48,8 +62,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.userToken = user.userToken;
 
         try {
-          // const decoded: any = jwtDecode(user.userToken);
-          const decoded: any = jwtDecode(user.userToken as string);
+          const decoded: DecodedToken = jwtDecode<DecodedToken>(
+            user.userToken as string
+          );
 
           token.id = decoded.id || 0;
           token.role = decoded.role || null;
@@ -62,19 +77,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ token, session }) {
-      // const uid = token.id as number;
       session.user = {
         ...session.user,
-        name: typeof token.name === "string" ? token.name : (token.username as string),
-        id: `${token.id ?? ""}`, 
+        name:
+          typeof token.name === "string"
+            ? token.name
+            : (token.username as string),
+        id: `${token.id ?? ""}`,
         email: token.email as string,
         avatar: token.avatar as string,
         role: token.role as string | null,
       };
-      (session as any).userToken = token.userToken;
-      return session;
+      const customSession = session as CustomSession;
+      customSession.userToken = token.userToken as string;
+      return customSession;
     },
   },
 });
-
-

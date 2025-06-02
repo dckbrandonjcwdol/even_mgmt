@@ -4,6 +4,7 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
+      name: string; // 👈 Added this to match usage
       username?: string;
       email: string;
       avatar?: string;
@@ -14,6 +15,7 @@ declare module "next-auth" {
 
   interface JWT {
     id: string;
+    name: string; // 👈 Added this to match usage
     username?: string;
     email: string;
     avatar?: string;
@@ -23,6 +25,7 @@ declare module "next-auth" {
 
   interface User {
     id: string;
+    name: string; // 👈 Added this to match usage
     username?: string;
     email: string;
     avatar?: string;

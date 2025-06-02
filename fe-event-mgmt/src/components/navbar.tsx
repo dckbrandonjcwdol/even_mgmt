@@ -5,13 +5,14 @@ import Image from "next/image";
 import Wrapper from "./wrapper";
 import Logout from "./logout";
 import { getBrandName } from "@/lib/brand";
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 const navItems = [
   { label: "About Us", path: "/about" },
   { label: "Services", path: "/services" },
+  { label: "SignUp", path: "/register" },
 ];
 
 const navOrgItems = [

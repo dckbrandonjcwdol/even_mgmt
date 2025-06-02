@@ -1,6 +1,6 @@
 import React from "react";
-import { CalendarIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
-import Wrapper from "./wrapper";
+import { CalendarIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 export default function EventPage() {
   return (
@@ -60,7 +60,7 @@ export default function EventPage() {
         </div>
 
         <div className="bg-gray-100 rounded-lg p-2 mb-4 max-w-4xl">
-          <img
+          <Image
             src="/your-image-url.png"
             alt="Event"
             className="rounded-lg object-cover h-48 w-full"

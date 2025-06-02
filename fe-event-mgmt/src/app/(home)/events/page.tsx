@@ -1,5 +1,4 @@
 import EventListPage from "@/components/EventListPage";
-import FormLogin from "@/components/login/form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

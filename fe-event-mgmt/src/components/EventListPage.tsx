@@ -15,31 +15,33 @@ interface Event {
 export default function EventListPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('');
-  const [location, setLocation] = useState('');
+  const [category] = useState('');
+  const [location] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  const fetchEvents = async () => {
-    try {
-      const res = await axios.get('/api/events', {
-        params: { q: query, category, location, page },
-      });
-      setEvents(res.data.events);
-      setTotalPages(res.data.totalPages);
-    } catch (err) {
-      console.error('Failed to fetch events:', err);
-    }
-  };
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await axios.get('/api/events', {
+          params: { q: query, category, location, page },
+        });
+        setEvents(res.data.events);
+        setTotalPages(res.data.totalPages);
+      } catch (err) {
+        console.error('Failed to fetch events:', err);
+      }
+    };
+
+    fetchEvents();
+  }, [query, category, location, page]);
+
 
   const debouncedSearch = debounce((value: string) => {
     setQuery(value);
     setPage(1);
   }, 500);
 
-  useEffect(() => {
-    fetchEvents();
-  }, [query, category, location, page]);
 
   return (
     <div className="p-4">

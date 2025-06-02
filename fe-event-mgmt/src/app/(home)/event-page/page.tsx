@@ -1,4 +1,3 @@
-import FormCreateEvent from "@/components/event-create";
 import EventPage from "@/components/eventPage";
 import { auth } from "@/lib/auth";
 import { Metadata } from "next";

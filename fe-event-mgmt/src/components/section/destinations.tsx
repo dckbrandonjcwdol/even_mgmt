@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useRef, useEffect, useState } from "react";
 
 interface Destination {
@@ -131,9 +132,10 @@ const DestinationSection = () => {
               className="flex-shrink-0 w-64 rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition relative bg-white"
             >
               <div className="relative h-40">
-                <img
+                <Image
                   src={dest.image}
                   alt={dest.name}
+                  fill
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = `https://source.unsplash.com/800x600/?${encodeURIComponent(dest.name)},city`;
