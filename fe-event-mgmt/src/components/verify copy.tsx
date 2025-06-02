@@ -3,7 +3,6 @@
 import axios from "@/lib/axios";
 import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 
 export default function VerifyPage({ token }: { token: string }) {
   const [msg, setMsg] = useState<string>("");
@@ -34,21 +33,8 @@ export default function VerifyPage({ token }: { token: string }) {
   }, []);
 
   return (
-    <div className="flex w-full h-screen justify-center items-center perspective-1000 bg-white">
-      <div className="text-black flex gap-2 animate-bounce">
-        <Image
-          alt="logo-eventique"
-          src={"/logo4.png"}
-          width={100}
-          height={100}
-          className="h-8 w-8"
-          priority
-        />
-        <span className="self-center text-2xl font-semibold whitespace-nowrap animate-pulse">
-          {msg}
-        </span>
-      </div>
-    </div>    
-
+    <div className="flex h-screen w-screen justify-center items-center">
+      <h1 className="text-6xl text-orange-500">{msg}</h1>
+    </div>
   );
 }

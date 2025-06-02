@@ -1,31 +1,21 @@
-// import BlogCard from "@/components/blog/card";
+import EventSection from "@/components/section/event";
+import HeroSection from "@/components/section/hero";
 import Wrapper from "@/components/wrapper";
-import { auth } from "@/lib/auth";
-// import { IBlog } from "@/types/blog";
-import { redirect } from "next/navigation";
+import DestinationSection from "@/components/section/destinations";
 
 export default async function Home() {
-
-  const res = await fetch(
-    "https://saucysmile-us.backendless.app/api/data/Blogs?loadRelations=author"
-  );
-
-  // const res = await fetch(
-  //   "https://buffbasket-us.backendless.app/api/data/Blogs?loadRelations=author"
-  // );
-
-  
-  
-  // const data: IBlog[] = await res.json();
 
   return (
     <Wrapper>
       <div className="py-4 sm:py-8">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-300 md:my-2 text-shadow">
+        <HeroSection />
+        <EventSection />
+        <DestinationSection />
+        {/* <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-300 md:my-2 text-shadow">
           Halaman Home <span className="text-green-700">Tanpa Login</span>
-        </h2>
-        <div className="grid w-full sm:py-4 sm:gap-2 md:gap-10 grid-cols-1 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2">
-
+        </h2> */}
+        <div>
+         
         </div>
       </div>
     </Wrapper>

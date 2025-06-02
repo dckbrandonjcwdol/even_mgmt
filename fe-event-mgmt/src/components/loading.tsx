@@ -7,7 +7,7 @@ export const LoadingComp = () => {
       <div className="text-black flex gap-2 animate-bounce">
         <Image
           alt="logo-eventique"
-          src={"/logo.png"}
+          src={"/logo4.png"}
           width={100}
           height={100}
           className="h-8 w-8"
