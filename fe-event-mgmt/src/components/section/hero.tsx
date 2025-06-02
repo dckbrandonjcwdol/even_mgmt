@@ -96,17 +96,22 @@ const HeroSection = () => {
         <p className="text-center text-gray-500">Loading slides...</p>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-4 mt-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-6 mt-8">
         {categories.map((cat) => (
           <div
             key={cat.name}
-            className="flex flex-col items-center justify-center border rounded-full py-4 hover:bg-blue-50 transition"
+            className="flex flex-col items-center justify-center space-y-2"
           >
-            <span className="text-3xl mb-2">{cat.icon}</span>
+            {/* Lingkaran berisi ikon */}
+            <div className="flex items-center justify-center w-20 h-20 rounded-full border border-blue-100 hover:bg-blue-50 transition">
+              <span className="text-3xl">{cat.icon}</span>
+            </div>
+            {/* Nama kategori */}
             <p className="text-sm text-center font-medium">{cat.name}</p>
           </div>
         ))}
       </div>
+
     </div>
   );
 };

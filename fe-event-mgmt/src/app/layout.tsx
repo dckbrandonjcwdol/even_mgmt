@@ -5,6 +5,7 @@ import { Bounce, ToastContainer } from "react-toastify";
 import Navbar from "@/components/navbar";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { auth } from "@/lib/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,16 +22,19 @@ export const metadata: Metadata = {
   description: `${process.env.NEXT_PUBLIC_BRAND} Event Management`,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+  console.log("Session (server):", session); // Ini akan log di server console
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>
-          <SessionProvider>
+          <SessionProvider session={session}> {/* ✅ tambahkan session prop */}
             <Navbar />
             {children}
           </SessionProvider>

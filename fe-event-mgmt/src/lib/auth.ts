@@ -17,7 +17,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (!credentials) return null;
 
         const user: User = {
-          id: credentials.id as number,
+          id: credentials.id as string,
           name: credentials.username as string, // digunakan untuk session
           username: credentials.username as string,
           email: credentials.email as string,
@@ -76,3 +76,5 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
 });
+
+

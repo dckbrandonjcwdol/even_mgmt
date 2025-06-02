@@ -29,4 +29,6 @@ declare module "next-auth" {
     role?: string | null;     // juga di JWT
     userToken?: string;
   }
+
+
 }

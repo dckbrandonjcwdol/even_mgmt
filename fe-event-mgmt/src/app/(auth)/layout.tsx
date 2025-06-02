@@ -1,6 +1,5 @@
 
 
-
 export default async function HomeLayout({
   children,
 }: Readonly<{
