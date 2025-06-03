@@ -11,8 +11,8 @@ export const getEventsByOrganizer = async (organizerId: number) => {
     console.log("Response data:", response.data);
 
     return response.data;
-  } catch (error: any) {
-    console.error('Failed to fetch events:', error?.response?.data || error.message);
+  } catch (error: unknown) {
+    console.error('Failed to fetch events:', error);
     throw new Error('Failed to fetch events');
   }
 };
