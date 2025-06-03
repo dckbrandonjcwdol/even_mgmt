@@ -136,6 +136,7 @@ const DestinationSection = () => {
                   src={dest.image}
                   alt={dest.name}
                   fill
+                  sizes="(max-width: 768px) 100vw, 100vw" 
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = `https://source.unsplash.com/800x600/?${encodeURIComponent(dest.name)},city`;

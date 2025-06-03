@@ -30,7 +30,11 @@ const HeroSection = () => {
             `https://api.unsplash.com/photos/random?query=${keyword}&client_id=${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}`
           );
           const data = await res.json();
-
+          
+            // Tambahkan log agar lebih jelas
+            console.log(`Keyword: ${keyword}`);
+            console.log("Fetched data:", data);
+                      
           return {
             title: keyword.toUpperCase(),
             subtitle: "DISCOVER NOW",
@@ -41,6 +45,7 @@ const HeroSection = () => {
           };
         })
       );
+
       setSlides(fetchedSlides);
     } catch (err) {
       console.error("Failed to fetch Unsplash images", err);
@@ -63,12 +68,22 @@ const HeroSection = () => {
     <div className="w-full max-w-screen-xl mx-auto px-4 py-6">
       {slides.length > 0 ? (
         <div className="relative overflow-hidden rounded-xl">
-          <Image
+          {/* <Image
             src={slides[slide].image}
             alt="Hero"
             fill
+            sizes="(max-width: 768px) 100vw, 100vw" 
             className="w-full h-[400px] object-cover transition-all duration-500"
-          />
+          /> */}
+          <div className="relative overflow-hidden rounded-xl w-full aspect-[10/3]">
+            <Image
+              src={slides[slide].image}
+              alt="Hero"
+              fill
+              sizes="100vw"
+              className="object-cover transition-all duration-500"
+            />
+          </div>          
           <div className="absolute inset-0 bg-black/40 flex flex-col justify-center p-6 md:p-12 text-white">
             <p className="text-sm font-semibold mb-2">{slides[slide].subtitle}</p>
             <h2 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">
