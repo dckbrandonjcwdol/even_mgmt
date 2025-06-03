@@ -26,6 +26,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.0.0",
     "react-toastify": "^11.0.5",
+    "recharts": "^2.15.3",
     "yup": "^1.6.1"
   },
   "devDependencies": {
@@ -38,6 +39,7 @@
     "@types/node": "^20",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19",
+    "@types/recharts": "^1.8.29",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "tailwindcss": "^4",

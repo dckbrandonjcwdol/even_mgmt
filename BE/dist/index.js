@@ -8,6 +8,7 @@ const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const auth_router_1 = require("./routers/auth.router");
 const event_router_1 = require("./routers/event.router");
+const dashboard_router_1 = require("./routers/dashboard.router");
 const PORT = 8000;
 const app = (0, express_1.default)();
 // Middlewares
@@ -22,6 +23,8 @@ app.get("/api", (req, res) => {
 // Router registrations
 const authRouter = new auth_router_1.AuthRouter();
 app.use("/api/auth", authRouter.getRouter());
+const dashboardRouter = new dashboard_router_1.DashboardRouter();
+app.use("/api/dashboard", dashboardRouter.getRouter());
 const eventRouter = new event_router_1.EventRouter();
 app.use("/api/", eventRouter.getRouter());
 // Start server

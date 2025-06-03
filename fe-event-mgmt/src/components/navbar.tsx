@@ -17,7 +17,7 @@ const navItems = [
 
 const navOrgItems = [
   { label: "About Us", path: "/about" },
-  { label: "Services", path: "/services" },
+  { label: "Dashboard", path: "/dashboard" },
   { label: "Buy", path: "/event-buy" },
   { label: "AddEvent", path: "/event-create" },
 ];

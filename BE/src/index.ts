@@ -4,6 +4,7 @@ import path from "path";
 
 import { AuthRouter } from "./routers/auth.router";
 import { EventRouter } from "./routers/event.router";
+import { DashboardRouter } from "./routers/dashboard.router";
 
 const PORT: number = 8000;
 
@@ -24,6 +25,9 @@ app.get("/api", (req: Request, res: Response) => {
 // Router registrations
 const authRouter = new AuthRouter();
 app.use("/api/auth", authRouter.getRouter());
+
+const dashboardRouter = new DashboardRouter();
+app.use("/api/dashboard", dashboardRouter.getRouter());
 
 const eventRouter = new EventRouter();
 app.use("/api/", eventRouter.getRouter());
