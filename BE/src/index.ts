@@ -18,7 +18,7 @@ app.use("/api/public", express.static(path.join(__dirname, "../public")));
 
 // Root route
 app.get("/api", (req: Request, res: Response) => {
-  res.status(200).send({ message: "Welcome to my API" });
+  res.status(200).send({ message: "Welcome to Event Management API" });
 });
 
 // Router registrations

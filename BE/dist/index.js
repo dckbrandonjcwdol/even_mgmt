@@ -17,7 +17,7 @@ app.use((0, cors_1.default)());
 app.use("/api/public", express_1.default.static(path_1.default.join(__dirname, "../public")));
 // Root route
 app.get("/api", (req, res) => {
-    res.status(200).send({ message: "Welcome to my API" });
+    res.status(200).send({ message: "Welcome to Event Management API" });
 });
 // Router registrations
 const authRouter = new auth_router_1.AuthRouter();
