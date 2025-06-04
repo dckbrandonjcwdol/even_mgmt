@@ -4,9 +4,12 @@ import axios from "@/lib/axios";
 import { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 export default function VerifyPage({ token }: { token: string }) {
   const [msg, setMsg] = useState<string>("");
+  const router = useRouter();
 
   const onVerify = useCallback(async () => {
     try {
@@ -21,6 +24,9 @@ export default function VerifyPage({ token }: { token: string }) {
         }
       );
       setMsg(data.message);
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000); // Redirect setelah 2 detik      
     } catch (err) {
       if (err instanceof AxiosError) {
         setMsg(err.response?.data?.message);
