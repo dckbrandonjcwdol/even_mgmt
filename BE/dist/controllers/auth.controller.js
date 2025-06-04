@@ -98,7 +98,7 @@ class AuthController {
             const compiledTemplate = handlebars_1.default.compile(templateSource);
             const html = compiledTemplate({
                 username: user.username,
-                link: `http://localhost:3000/verify?token=${token}`
+                link: `${process.env.EMAI_VERIFICATION_URL}/verify?token=${token}`
             });
             await mailer_1.transporter.sendMail({
                 from: process.env.GMAIL_USER,
@@ -113,7 +113,57 @@ class AuthController {
             res.status(500).send({ message: "Internal server error", error: err });
         }
     }
+    // async login(req: Request, res: Response) {
+    //   try {
+    //     const { login, password } = req.body;
+    //     const user = await prisma.user.findFirst({
+    //       where: {
+    //         OR: [
+    //           { username: login },
+    //           { email: login }
+    //         ]
+    //       },
+    //       select: {
+    //         id: true,
+    //         username: true,
+    //         email: true,
+    //         password: true,
+    //         avatar: true,
+    //         isVerified: true,
+    //         role: true,
+    //         referralCode: true,
+    //         points: true,
+    //       }
+    //     });
+    //     if (!user) {
+    //       res.status(404).send({ message: "User not found" });
+    //       return;
+    //     }
+    //     const isPasswordValid = await compare(password, user.password);
+    //     if (!isPasswordValid) {
+    //       res.status(401).send({ message: "Invalid password" });
+    //       return;
+    //     }
+    //     if (!user.isVerified) {
+    //       res.status(402).send({ message: "Account not verified, please check your confirmation email !" });
+    //       return;
+    //     } 
+    //     const payload = { id: user.id, role: user.role };
+    //     const token = sign(payload, process.env.SECRET_KEY!, { expiresIn: "1h" });
+    //     // Hapus password dari response
+    //     const { password: _, ...userWithoutPassword } = user;
+    //     res.status(200).send({
+    //       message: "Login OK",
+    //       user: userWithoutPassword,
+    //       token
+    //     });
+    //   } catch (err) {
+    //     console.error("Query error:", err);
+    //     res.status(500).send({ message: "Internal error", error: err });
+    //   }
+    // }
     async login(req, res) {
+        var _a;
         try {
             const { login, password } = req.body;
             const user = await prisma_1.default.user.findFirst({
@@ -131,6 +181,8 @@ class AuthController {
                     avatar: true,
                     isVerified: true,
                     role: true,
+                    referralCode: true,
+                    // Jangan ambil points langsung (array), akan kita jumlahkan terpisah
                 }
             });
             if (!user) {
@@ -143,16 +195,23 @@ class AuthController {
                 return;
             }
             if (!user.isVerified) {
-                res.status(402).send({ message: "Account not verified, please check your confirmation email !" });
+                res.status(402).send({ message: "Account not verified, please check your confirmation email!" });
                 return;
             }
+            // Ambil total points user dari tabel Point
+            const pointSummary = await prisma_1.default.point.aggregate({
+                where: { userId: user.id },
+                _sum: {
+                    points: true,
+                },
+            });
+            const totalPoints = (_a = pointSummary._sum.points) !== null && _a !== void 0 ? _a : 0;
             const payload = { id: user.id, role: user.role };
             const token = (0, jsonwebtoken_1.sign)(payload, process.env.SECRET_KEY, { expiresIn: "1h" });
-            // Hapus password dari response
             const { password: _ } = user, userWithoutPassword = __rest(user, ["password"]);
             res.status(200).send({
                 message: "Login OK",
-                user: userWithoutPassword,
+                user: Object.assign(Object.assign({}, userWithoutPassword), { points: totalPoints }),
                 token
             });
         }

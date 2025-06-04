@@ -1,6 +1,6 @@
 import NextAuth, { User as NextAuthUser, Session } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import { jwtDecode } from "jwt-decode";
+// import { jwtDecode } from "jwt-decode";
 
 interface User extends NextAuthUser {
   id: string;
@@ -12,11 +12,11 @@ interface User extends NextAuthUser {
   points: string | null;
 }
 
-interface DecodedToken {
-  id: string | number;
-  role: string | null;
-  referralCode: string | null;
-}
+// interface DecodedToken {
+//   id: string | number;
+//   role: string | null;
+//   referralCode: string | null;
+// }
 
 interface CustomSession extends Session {
   user: Session["user"] & {
@@ -83,9 +83,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.role = user.role;         
 
         try {
-          const decoded: DecodedToken = jwtDecode<DecodedToken>(
-            user.userToken as string
-          );
+          // const decoded: DecodedToken = jwtDecode<DecodedToken>(
+          //   user.userToken as string
+          // );
 
           // token.id = decoded.id || 0;
           // token.role = decoded.role || null;
