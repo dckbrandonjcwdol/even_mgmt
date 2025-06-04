@@ -6,6 +6,8 @@ export interface Session {
     email: string;
     avatar: string;
     role: string | null;
+    referralCode: string | null;
+    points: string | null;
   };
   userToken?: string;
   expires?: string;

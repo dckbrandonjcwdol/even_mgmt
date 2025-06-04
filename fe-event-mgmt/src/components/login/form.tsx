@@ -30,23 +30,30 @@ export default function FormLogin() {
     value: ILoginForm,
     action: FormikHelpers<ILoginForm>
   ) => {
+    console.log("Form submitted with values:", value);
     try {
       const { data } = await axios.post("/auth/login", value);
+      // Tambahkan ini untuk debug isi respon dari backend
+        console.log("Login response data:", data);
+        
       await signIn("credentials", {
         callbackUrl: "/home",
         id: data.user.id,
         username: data.user.username,
         email: data.user.email,
         userToken: data.token,
-        role: data.role,
+        role: data.user.role,
+        points: data.user.points,
+        referralCode: data.user.referralCode,
       });
-      // console.log(data);
+
       toast.success(data.message);
       action.resetForm();
     } catch (err) {
-      console.log(err);
+      console.log("Error during login:", err);
       action.setSubmitting(false);
       if (err instanceof AxiosError) {
+        console.log("Axios error details:", err.response?.data);
         toast.error(err.response?.data?.message || "Login failed");
       }
     }

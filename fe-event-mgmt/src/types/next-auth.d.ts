@@ -9,6 +9,8 @@ declare module "next-auth" {
       email: string;
       avatar?: string;
       role?: string | null;    // tambahkan role di sini
+      referralCode?: string | null;
+      points?: string | null;
     };
     userToken?: string;
   }
@@ -20,7 +22,9 @@ declare module "next-auth" {
     email: string;
     avatar?: string;
     role?: string | null;     // juga di User (opsional)
+    referralCode?: string | null;
     userToken?: string;
+    points?: string | null;    
   }
 
   interface User {
@@ -30,7 +34,9 @@ declare module "next-auth" {
     email: string;
     avatar?: string;
     role?: string | null;     // juga di JWT
+    referralCode?: string | null;
     userToken?: string;
+    points?: string | null;
   }
 
 

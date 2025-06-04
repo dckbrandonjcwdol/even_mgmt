@@ -8,11 +8,14 @@ interface User extends NextAuthUser {
   avatar: string;
   userToken: string;
   role: string | null;
+  referralCode: string | null;
+  points: string | null;
 }
 
 interface DecodedToken {
   id: string | number;
   role: string | null;
+  referralCode: string | null;
 }
 
 interface CustomSession extends Session {
@@ -20,6 +23,8 @@ interface CustomSession extends Session {
     id: string;
     avatar: string;
     role: string | null;
+    referralCode: string | null;
+    points: string | null;
   };
   userToken: string;
 }
@@ -28,7 +33,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials): Promise<User | null> {
+
+        console.log("Authorize credentials:", credentials);
+
+        // Delay sebentar (misalnya 3 detik) supaya kamu bisa lihat log dulu
+        // await new Promise((resolve) => setTimeout(resolve, 13000));
+
         if (!credentials) return null;
+
 
         const user: User = {
           id: credentials.id as string,
@@ -37,9 +49,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           email: credentials.email as string,
           avatar: credentials.avatar as string,
           userToken: credentials.userToken as string,
-          role: typeof credentials.role === "string" ? credentials.role : null,
-        };
+          referralCode: credentials.referralCode as string,
+          role: credentials.role as string,
+          points: credentials.points as string,
+          // role: typeof credentials.role === "string" ? credentials.role : null,
 
+        };
         return user;
       },
     }),
@@ -53,6 +68,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async jwt({ token, user }) {
+        console.log("JWT Callbacks:", user);
+        // await new Promise((resolve) => setTimeout(resolve, 13000));    
+
       if (user) {
         token.id = user.id;
         token.name = user.username;
@@ -60,14 +78,22 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.email = user.email;
         token.avatar = user.avatar;
         token.userToken = user.userToken;
+        token.referralCode = user.referralCode;   
+        token.points = user.points;       
+        token.role = user.role;         
 
         try {
           const decoded: DecodedToken = jwtDecode<DecodedToken>(
             user.userToken as string
           );
 
-          token.id = decoded.id || 0;
-          token.role = decoded.role || null;
+          // token.id = decoded.id || 0;
+          // token.role = decoded.role || null;
+          // token.referralCode = decoded.referralCode || null;
+
+          console.log("JWT Callbacks Token:", token);
+          // await new Promise((resolve) => setTimeout(resolve, 13000));    
+
         } catch (error) {
           console.error("Failed to decode JWT:", error);
           token.role = null;
@@ -77,6 +103,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return token;
     },
     async session({ token, session }) {
+        console.log("Session:", token);
+
+        // Delay sebentar (misalnya 3 detik) supaya kamu bisa lihat log dulu
+        // await new Promise((resolve) => setTimeout(resolve, 13000));      
+
       session.user = {
         ...session.user,
         name:
@@ -87,6 +118,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         email: token.email as string,
         avatar: token.avatar as string,
         role: token.role as string | null,
+        referralCode: token.referralCode as string | null,
+        points: token.points as string | null,
+
       };
       const customSession = session as CustomSession;
       customSession.userToken = token.userToken as string;

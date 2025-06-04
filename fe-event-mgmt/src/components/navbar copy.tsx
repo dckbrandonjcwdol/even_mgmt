@@ -83,13 +83,8 @@ export default function Navbar() {
                   )
                 }
                 <div className="flex items-center space-x-3">
-                  <span className="text-sm font-medium">
-                      <Link
-                        href="/profile"
-                        className="hover:text-yellow-600 transition"
-                      >
-                        Profile
-                      </Link>
+                  <span className="text-gray-700 text-sm font-medium">
+                    {session.user.name}
                   </span>
                   <Logout />
                 </div>
@@ -158,13 +153,8 @@ export default function Navbar() {
 
                 <div className="flex items-center justify-between border-t pt-2 mt-5">
                   <div>
-                    <span className="text-sm font-medium">
-                      <Link
-                        href="/profile"
-                        className="hover:text-yellow-600 transition"
-                      >
-                        Profile
-                      </Link>
+                    <span className="text-gray-700 text-sm font-medium">
+                      {session.user.name}
                     </span>
                   </div>
                   <div>
