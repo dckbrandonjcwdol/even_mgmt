@@ -1,7 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import React from "react";
+import { getEvents} from "@/lib/api";
+import { ShoppingCart } from "lucide-react";
+// import Image from "next/image";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 const tabs = [
   "All",
@@ -17,40 +20,71 @@ const tabs = [
   "Charity & Causes",
 ];
 
-const events = [
-  {
-    title: "Certified International Procurement Professional...",
-    date: "Mon, Jul 21 • 8:30 AM",
-    location: "Online Training",
-    price: "From $1,602.45",
-    image: "https://picsum.photos/seed/event1/400/200",
-    organizer: "PT. Husin Intelligence Group",
-    followers: "164 followers",
-    badge: null,
-  },
-  {
-    title: "WEBINAR RAHASIA PIPA DUIT 24/7",
-    date: "Sat, Jun 14 • 2:00 PM",
-    location: "Hotel Grand Tjokro",
-    price: "Free",
-    image: "https://picsum.photos/seed/event4/400/200",
-    organizer: "Kwet Liung",
-    followers: "1.5k followers",
-    badge: "Going fast",
-  },
-  {
-    title: "Indonesia International Industry Week",
-    date: "Wednesday • 10:00 AM",
-    location: "JIEXPO Kemayoran",
-    price: "Free",
-    image: "https://picsum.photos/seed/industry-week/400/200",
-    organizer: "Meorient Exhibition International",
-    followers: "11 followers",
-    badge: "Sales end soon",
-  },
-];
 
-const EventSection = () => {
+interface Event {
+  id: number;
+  organizerId: number;
+  title: string;
+  description: string;
+  locationId: number;
+  startDate: string;
+  endDate: string;
+  price: number | null;
+  isPaid: boolean;
+  totalSeats: number;
+  availableSeats: number;
+  categoryId: number;
+  createdAt: string;
+  location: {
+    name: string;
+  };
+  category: {
+    name: string;
+  };
+}
+
+
+interface EventStats extends Event {
+  registered: number;
+  filledSeats: number;
+  revenue: number;
+}
+
+const EventSection: React.FC = () => {
+  const [events, setEvents] = useState<EventStats[]>([]);
+  const [loading, setLoading] = useState(true);
+  
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const data = await getEvents();
+
+        const events = data.map((event: Event) => {
+          const filledSeats = event.totalSeats - event.availableSeats;
+          const revenue = event.isPaid && event.price ? filledSeats * event.price : 0;
+
+          return {
+            ...event,
+            registered: filledSeats,
+            filledSeats,
+            revenue,
+          };
+        });
+
+        setEvents(events);
+      } catch (err) {
+        console.error('Error fetching events', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+
   return (
     <div className="w-full max-w-screen-xl mx-auto px-4 py-12">
       {/* Tabs */}
@@ -82,7 +116,7 @@ const EventSection = () => {
             key={index}
             className="bg-white border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition"
           >
-            <div className="relative">
+            {/* <div className="relative">
               <Image
                 src={event.image}
                 alt={event.title}
@@ -94,21 +128,46 @@ const EventSection = () => {
                   {event.badge}
                 </span>
               )}
-            </div>
+            </div> */}
             <div className="p-4">
               <h3 className="text-sm font-semibold leading-snug mb-1 line-clamp-2">
                 {event.title}
               </h3>
-              <p className="text-xs text-gray-600 mb-1">{event.date}</p>
-              <p className="text-xs text-gray-600 mb-1">{event.location}</p>
+              <p className="text-xs text-gray-600 mb-1">{event.description}</p>
+              <p className="text-xs text-gray-600 mb-1">
+                Date: {new Date(event.startDate).toLocaleDateString('id-ID', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                })}
+              </p>
+              <p className="text-xs text-gray-600 mb-1">
+                Time: {new Date(event.startDate).toLocaleTimeString('id-ID', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                }).replace(':', '.')}
+              </p>                
+              <p className="text-xs text-gray-600 mb-1">{event.location.name}</p>
               <p className="text-xs text-gray-900 font-medium mb-2">
-                {event.price}
+                Rp. {new Intl.NumberFormat('id-ID').format(event.price ?? 0)}
               </p>
-              <p className="text-xs text-gray-600">
-                {event.organizer}
-                <br />
-                <span className="text-gray-500">{event.followers}</span>
-              </p>
+
+
+              <div className="flex items-center justify-between text-xs text-gray-600">
+                <span className="text-gray-500">
+                  Available: {event.availableSeats} / {event.totalSeats}
+                </span>
+                <Link
+                  href={`/buy/${event.id}`} // jangan pakai tanda petik biasa dan titik koma di sini
+                  className="ml-4 bg-blue-500 text-white rounded hover:bg-blue-600 inline-flex items-center gap-1 px-2 py-1 w-auto whitespace-nowrap cursor-pointer"
+                >
+                  <ShoppingCart size={14} />
+                  Buy
+                </Link>
+              </div>
+
+
             </div>
           </div>
         ))}

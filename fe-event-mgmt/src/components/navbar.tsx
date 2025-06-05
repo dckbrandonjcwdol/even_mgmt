@@ -10,22 +10,22 @@ import { Menu, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 const navItems = [
-  { label: "About Us", path: "/about" },
-  { label: "Services", path: "/services" },
+  { label: "Home", path: "/" },
+  // { label: "Services", path: "/services" },
   { label: "SignUp", path: "/register" },
 ];
 
 const navOrgItems = [
-  { label: "About Us", path: "/about" },
-  { label: "Dashboard", path: "/dashboard" },
-  { label: "Buy", path: "/event-buy" },
+  { label: "Home", path: "/" },
+  // { label: "Dashboard", path: "/dashboard" },
+  // { label: "Buy", path: "/event-buy" },
   { label: "AddEvent", path: "/event-create" },
 ];
 
 const navCustItems = [
-  { label: "About Us", path: "/about" },
-  { label: "Services", path: "/services" },
-  { label: "Buy", path: "/event-buy" },
+  { label: "Home", path: "/" },
+  // { label: "Services", path: "/services" },
+  // { label: "Buy", path: "/event-buy" },
 ];
 
 export default function Navbar() {

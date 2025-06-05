@@ -16,3 +16,18 @@ export const getEventsByOrganizer = async (organizerId: number) => {
     throw new Error('Failed to fetch events');
   }
 };
+
+export const getEvents = async () => {
+  try {
+
+    const response = await axios.get('/events');
+
+    console.log("Response data:", response.data);
+
+    return response.data;
+  } catch (error: unknown) {
+    console.error('Failed to fetch events:', error);
+    throw new Error('Failed to fetch events');
+  }
+};
+

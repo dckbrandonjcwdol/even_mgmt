@@ -10,7 +10,10 @@ class DashboardRouter {
         this.initializeRoutes();
     }
     initializeRoutes() {
-        this.router.post('/events', this.dashboardController.getEvents);
+        this.router.post('/events-by-org', this.dashboardController.getEventsByOrganizerId);
+        this.router.get('/events', this.dashboardController.getEvents);
+        this.router.get('/event/:id', this.dashboardController.getEventById);
+        this.router.post('/buy-ticket', this.dashboardController.buyTicket);
     }
     getRouter() {
         return this.router;

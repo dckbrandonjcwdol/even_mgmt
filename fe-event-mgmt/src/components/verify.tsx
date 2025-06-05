@@ -34,7 +34,7 @@ export default function VerifyPage({ token }: { token: string }) {
         setMsg("Verification Failed!");
       }
     }
-  }, [token]);
+  }, [token, router]);
 
   useEffect(() => {
     onVerify();

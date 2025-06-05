@@ -17,7 +17,7 @@ export default async function Page() {
     redirect("/home");
   }
 
-  const organizerId = 1; 
+  const organizerId = parseInt(user.id); 
 
   return (
     <div className="w-screen h-screen flex justify-center items-center">
