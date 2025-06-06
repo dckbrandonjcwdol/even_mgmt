@@ -1,13 +1,13 @@
 import axios from "axios";
 
-// const BASE_URL = "https://saucysmile-us.backendless.app/api";
-// const BASE_URL = "http://localhost:8000/api";
-const BASE_URL = "https://even-mgmt.vercel.app/api";
+const BASE_URL = process.env.NEXT_PUBLIC_BE_URL;
 
-
-
+if (!BASE_URL) {
+  throw new Error("Environment variable NEXT_PUBLIC_BE_URL is not defined");
+}
 
 
 export default axios.create({
   baseURL: BASE_URL,
 });
+

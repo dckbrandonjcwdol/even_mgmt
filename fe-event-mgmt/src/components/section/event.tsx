@@ -155,9 +155,9 @@ const EventSection: React.FC = () => {
 
 
               <div className="flex items-center justify-between text-xs text-gray-600">
-                <span className="text-gray-500">
+                {/* <span className="text-gray-500">
                   Available: {event.availableSeats} / {event.totalSeats}
-                </span>
+                </span> */}
                 <Link
                   href={`/buy/${event.id}`} // jangan pakai tanda petik biasa dan titik koma di sini
                   className="ml-4 bg-blue-500 text-white rounded hover:bg-blue-600 inline-flex items-center gap-1 px-2 py-1 w-auto whitespace-nowrap cursor-pointer"
