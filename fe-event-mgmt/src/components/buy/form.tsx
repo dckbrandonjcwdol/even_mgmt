@@ -28,14 +28,18 @@ interface TicketType {
 }
 
 export default function FormBuyTicket({ id }: { id: string }) {
+  
   const router = useRouter();
   const { data: session, status } = useSession();
-
+  
   const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
   const [ticketTypeId, setTicketTypeId] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
+
+  
+  const {points } = session?.user || {};
 
   // Debug print id ke console setiap kali id berubah
   useEffect(() => {
@@ -176,6 +180,9 @@ export default function FormBuyTicket({ id }: { id: string }) {
           />
         </div> */}
 
+          <div>
+            Your points: {(Number(points) || 0).toLocaleString('id-ID')}
+          </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
         <button
