@@ -21,13 +21,18 @@ interface Event {
   };
 }
 
+interface TicketType {
+  id: string;
+  name: string;
+  price: number;
+}
+
 export default function FormBuyTicket({ id }: { id: string }) {
   const router = useRouter();
   const { data: session, status } = useSession();
 
-  // const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
-  // const [ticketTypeId, setTicketTypeId] = useState("");
-  const [quantity, setQuantity] = useState(1);
+  const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
+  const [ticketTypeId, setTicketTypeId] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
@@ -53,27 +58,27 @@ export default function FormBuyTicket({ id }: { id: string }) {
     fetchEvent();
   }, [id]);
 
-  // useEffect(() => {
-  //   if (!id) return;
+  useEffect(() => {
+    if (!id) return;
 
-  //   const fetchTicketType = async () => {
-  //     try {
-  //       const res = await axios.get(`/ticket-type/${id}`);
-  //       console.log("Debug: response ticket-type:", res);  // <-- debug di sini
-  //       if (res.data && Array.isArray(res.data)) {
-  //         setTicketTypes(res.data);
-  //         setTicketTypeId(res.data[0]?.id || "");
-  //       } else {
-  //         console.warn("Debug: ticket-type data tidak berupa array atau kosong", res.data);
-  //       }
-  //     } catch (error) {
-  //       console.error("Debug: gagal fetch ticket-type", error);
-  //       setError("Gagal mengambil data TicketType.");
-  //     }
-  //   };
+    const fetchTicketType = async () => {
+      try {
+        const res = await axios.get(`/ticket-type/${id}`);
+        console.log("Debug: response ticket-type:", res);  // <-- debug di sini
+        if (res.data && Array.isArray(res.data)) {
+          setTicketTypes(res.data);
+          setTicketTypeId(res.data[0]?.id || "");
+        } else {
+          console.warn("Debug: ticket-type data tidak berupa array atau kosong", res.data);
+        }
+      } catch (error) {
+        console.error("Debug: gagal fetch ticket-type", error);
+        setError("Gagal mengambil data TicketType.");
+      }
+    };
 
-  //   fetchTicketType();
-  // }, [id]);
+    fetchTicketType();
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,8 +94,8 @@ export default function FormBuyTicket({ id }: { id: string }) {
     const payload = {
       customerId: session.user.id,
       eventId: id,
-      ticketTypeId: 1,
-      quantity: quantity,
+      ticketTypeId: ticketTypeId, 
+      quantity: 1,
     };
 
     try {
@@ -130,7 +135,7 @@ export default function FormBuyTicket({ id }: { id: string }) {
           </p>
         </div>
 
-        {/* <div>
+        <div>
           <label htmlFor="ticketType" className="block font-medium text-sm">
             Ticket Type
           </label>
@@ -142,15 +147,21 @@ export default function FormBuyTicket({ id }: { id: string }) {
             required
           >
             <option value="">Pilih tiket</option>
-            {ticketTypes.map((ticket: TicketType) => (
+            {/* {ticketTypes.map((ticket: any) => (
               <option key={ticket.id} value={ticket.id}>
                 {ticket.name} - Rp {ticket.price?.toLocaleString("id-ID")}
               </option>
+            ))} */}
+            {ticketTypes.map((ticket) => (
+              <option key={ticket.id} value={ticket.id}>
+                {ticket.name} - Rp {ticket.price.toLocaleString("id-ID")}
+              </option>
             ))}
-          </select>
-        </div> */}
 
-        <div>
+          </select>
+        </div>
+
+        {/* <div>
           <label htmlFor="quantity" className="block font-medium text-sm">
             Quantity
           </label>
@@ -163,7 +174,7 @@ export default function FormBuyTicket({ id }: { id: string }) {
             className="w-full mt-1 p-2 border rounded"
             required
           />
-        </div>
+        </div> */}
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
 

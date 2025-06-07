@@ -6,7 +6,6 @@ import { Field, Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { signIn } from "next-auth/react";
 import { toast } from "react-toastify";
 import * as yup from "yup";
-import Link from "next/link"; // ✅ Tambahkan ini
 
 const LoginSchema = yup.object().shape({
   login: yup.string().required("login is required"),
@@ -34,8 +33,9 @@ export default function FormLogin() {
     console.log("Form submitted with values:", value);
     try {
       const { data } = await axios.post("/auth/login", value);
-      console.log("Login response data:", data);
-
+      // Tambahkan ini untuk debug isi respon dari backend
+        console.log("Login response data:", data);
+        
       await signIn("credentials", {
         callbackUrl: "/home",
         id: data.user.id,
@@ -81,11 +81,10 @@ export default function FormLogin() {
                   type="text"
                   className="mb-2 p-2 border border-gray-600 rounded-md "
                   aria-describedby="loginError"
+                  
                 />
                 {touched.login && errors.login && (
-                  <div className="text-red-500 text-[12px] -mt-2">
-                    {errors.login}
-                  </div>
+                  <div className="text-red-500 text-[12px] -mt-2">{errors.login}</div>
                 )}
               </div>
 
@@ -103,20 +102,14 @@ export default function FormLogin() {
                     {errors.password}
                   </div>
                 )}
-                {/* ✅ Tambahkan tautan register di sini */}
-                <div className="mt-2 text-sm text-gray-600">
-                  Don&apos;t have an account?{" "}
-                  <Link href="/register" className="text-blue-600 underline">
-                    Register here
-                  </Link>
-                </div>
               </div>
 
               <div className="mt-12">
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="py-1 px-2 w-full  rounded-md transition disabled:opacity-50"
+                  className="py-1 px-2 w-full  rounded-md  transition disabled:opacity-50"
+
                 >
                   {isSubmitting ? "Loading ..." : "Sign in"}
                 </button>

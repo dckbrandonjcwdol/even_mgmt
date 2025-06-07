@@ -41,6 +41,10 @@ interface Event {
   category: {
     name: string;
   };
+  ticketTypes: [{
+    name: string;
+    price: number;
+  }];
 }
 
 
@@ -149,15 +153,35 @@ const EventSection: React.FC = () => {
                 }).replace(':', '.')}
               </p>                
               <p className="text-xs text-gray-600 mb-1">{event.location.name}</p>
-              <p className="text-xs text-gray-900 font-medium mb-2">
+              {/* <p className="text-xs text-gray-900 font-medium mb-2">
                 Rp. {new Intl.NumberFormat('id-ID').format(event.price ?? 0)}
-              </p>
+              </p> */}
+              {/* <div>
+                {event.ticketTypes && event.ticketTypes.length > 0 ? (
+                  event.ticketTypes.map((ticket, idx) => (
+                    <p key={idx} className="text-xs text-gray-900 font-medium mb-2">
+                      {ticket.name}: Rp. {new Intl.NumberFormat('id-ID').format(ticket.price ?? 0)}
+                    </p>
+                  ))
+                ) : (
+                  <p className="text-xs text-gray-900 font-medium mb-2">
+                    Rp. {new Intl.NumberFormat('id-ID').format(event.price ?? 0)}
+                  </p>
+                )}
+              </div> */}
+              <ul>
+                {event.ticketTypes?.map((ticket, idx) => (
+                  <li key={idx} className="text-xs text-gray-900 font-medium mb-2">
+                    {ticket.name}: Rp. {new Intl.NumberFormat('id-ID').format(ticket.price ?? 0)}
+                  </li>
+                ))}
+              </ul>
 
 
               <div className="flex items-center justify-between text-xs text-gray-600">
-                {/* <span className="text-gray-500">
+                <span className="text-gray-500">
                   Available: {event.availableSeats} / {event.totalSeats}
-                </span> */}
+                </span>
                 <Link
                   href={`/buy/${event.id}`} // jangan pakai tanda petik biasa dan titik koma di sini
                   className="ml-4 bg-blue-500 text-white rounded hover:bg-blue-600 inline-flex items-center gap-1 px-2 py-1 w-auto whitespace-nowrap cursor-pointer"
