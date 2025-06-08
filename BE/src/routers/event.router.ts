@@ -17,7 +17,9 @@ export class EventRouter {
     this.router.get('/event/:id', this.eventController.getEventById);
     this.router.get('/ticket-type/:id', this.eventController.getTickectType);
     this.router.post('/buy-ticket', this.eventController.buyTicket);
+    // this.router.post('/buy-ticket', this.eventController.buyTicket.bind(this.eventController));
     this.router.get('/confirmation/:id', this.eventController.getBuyConfirmation);
+    this.router.post("/points", this.eventController.getPoints);
 
     // this.router.post("/event-create", this.eventController.createEventHandler);
   }

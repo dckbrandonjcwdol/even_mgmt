@@ -37,9 +37,38 @@ export default function FormBuyTicket({ id }: { id: string }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [event, setEvent] = useState<Event | null>(null);
+  const [point, setPoint] = useState<number | null>(null); // ✅
 
   
-  const {points } = session?.user || {};
+  // const {points } = session?.user || {};
+
+  useEffect(() => {
+    
+    if (!session?.user?.id) return; // ✅ Pastikan session ada di dalam efek
+    
+    const fetchPoint = async () => {
+
+
+      const payload = {
+        userId: Number(session.user.id),
+      };
+
+      console.log("User ID yang dikirim:", payload.userId);
+
+      try {
+        const response = await axios.post("/points", payload, {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        console.log("✅ Points response:", response.data._sum.points);
+        setPoint(response.data._sum.points);
+      } catch (err) {
+        console.error("❌ Failed to load points:", err);
+      }
+    };
+
+    fetchPoint();
+  }, [session]); // dependensi session agar effect dipanggil ulang ketika login
 
   // Debug print id ke console setiap kali id berubah
   useEffect(() => {
@@ -86,6 +115,7 @@ export default function FormBuyTicket({ id }: { id: string }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("🧪 Form submitted");
     setLoading(true);
     setError("");
 
@@ -106,12 +136,37 @@ export default function FormBuyTicket({ id }: { id: string }) {
       const response = await axios.post("/buy-ticket", payload, {
         headers: { "Content-Type": "application/json" },
       });
+     
+      try {
+        console.log("✅ Response dari backend:", response.data);
 
-      router.push(`/confirmation/${response.data.registrationId}`);
+        const registrationId = response.data?.registrationId ?? "tidak-ada";
+        const finalPrice = response.data?.finalPrice ?? 0;
+        const usedPoints = response.data?.usedPoints ?? 0;
+
+        console.log("finalPrice type:", typeof finalPrice, "value:", finalPrice);
+        console.log("usedPoints type:", typeof usedPoints, "value:", usedPoints);
+
+        const query = new URLSearchParams({
+          registrationId,
+          finalPrice: finalPrice.toString(),
+          usedPoints: usedPoints.toString(),
+        });
+
+        console.log("🚀 Navigating to:", `/confirmation/${registrationId}?${query.toString()}`);
+
+        router.push(`/confirmation/${registrationId}?${query.toString()}`);
+
+      } catch (error) {
+        console.error("Error saat memproses response:", error);
+      }
+
     } catch (err: unknown) {
       if (isAxiosError(err)) {
+        console.error("❌ Axios Error:", err.response?.data);
         setError(err.response?.data?.message || "Terjadi kesalahan.");
       } else {
+        console.error("❌ Unknown Error:", err);
         setError("Gagal menghubungi server.");
       }
     }
@@ -181,7 +236,7 @@ export default function FormBuyTicket({ id }: { id: string }) {
         </div> */}
 
           <div>
-            Your points: {(Number(points) || 0).toLocaleString('id-ID')}
+            Your points: {(Number(point ?? 0) || 0).toLocaleString('id-ID')}
           </div>
         {error && <p className="text-red-500 text-sm">{error}</p>}
 

@@ -1,11 +1,43 @@
 "use client";
 
+import axios from "@/lib/axios";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+
 
 export default function Profile() {
   const { data: session, status } = useSession();
   const [copied, setCopied] = useState(false);
+  const [point, setPoint] = useState<number | null>(null); // ✅
+
+  useEffect(() => {
+    
+    if (!session?.user?.id) return; // ✅ Pastikan session ada di dalam efek
+    
+    const fetchPoint = async () => {
+
+
+      const payload = {
+        userId: Number(session.user.id),
+      };
+
+      console.log("User ID yang dikirim:", payload.userId);
+
+      try {
+        const response = await axios.post("/points", payload, {
+          headers: { "Content-Type": "application/json" },
+        });
+
+        console.log("✅ Points response:", response.data._sum.points);
+        setPoint(response.data._sum.points);
+      } catch (err) {
+        console.error("❌ Failed to load points:", err);
+      }
+    };
+
+    fetchPoint();
+  }, [session]); // dependensi session agar effect dipanggil ulang ketika login
 
   const handleCopy = () => {
     if (session?.user?.referralCode) {
@@ -31,7 +63,7 @@ export default function Profile() {
     );
   }
 
-  const { name, email, role, referralCode, points } = session.user;
+  const { name, email, role, referralCode } = session.user;
 
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-4">
@@ -48,13 +80,12 @@ export default function Profile() {
             <button
               onClick={handleCopy}
               className="text-sm bg-green-600 text-white rounded hover:bg-green-700 px-2 py-1"
-              style={{ width: "auto", minWidth: "unset" }}
             >
               {copied ? "Copied!" : "Copy"}
             </button>
           )}
         </div>
-        <p><span className="font-semibold">Total Points:</span> {points ?? 0}</p>
+        <p><span className="font-semibold">Total Points:</span> {point ?? 0}</p>
       </div>
     </div>
   );

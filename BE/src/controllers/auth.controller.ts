@@ -221,8 +221,13 @@ export class AuthController{
         }
 
         // Ambil total points user dari tabel Point
+        const now = new Date();
         const pointSummary = await prisma.point.aggregate({
-          where: { userId: user.id },
+          where: { 
+            userId: user.id,
+            redeemed: false,
+            expiresAt: { gt: now },
+          },
           _sum: {
             points: true,
           },
@@ -304,7 +309,6 @@ export class AuthController{
         res.status(400).send({ error: 'Referral Code is invalid', detail: err });
       }     
   }
-
 
 }
 

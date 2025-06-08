@@ -199,8 +199,13 @@ class AuthController {
                 return;
             }
             // Ambil total points user dari tabel Point
+            const now = new Date();
             const pointSummary = await prisma_1.default.point.aggregate({
-                where: { userId: user.id },
+                where: {
+                    userId: user.id,
+                    redeemed: false,
+                    expiresAt: { gt: now },
+                },
                 _sum: {
                     points: true,
                 },
