@@ -4,7 +4,8 @@ export const getEventsByOrganizer = async (organizerId: number) => {
   try {
     console.log("organizerId:", organizerId);
 
-    const response = await axios.post('/dashboard/events', {
+    // const response = await axios.post('/dashboard/events', {
+    const response = await axios.post('/dashboard/', {
       organizerId,
     });
 

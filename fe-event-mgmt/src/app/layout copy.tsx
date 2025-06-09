@@ -28,25 +28,17 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  console.log("Session (server):", session);
+  console.log("Session (server):", session); // Ini akan log di server console
 
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>
-          <SessionProvider session={session}>
-            {/* Fixed Navbar */}
-            <div className="fixed top-0 w-full z-50">
-              <Navbar />
-            </div>
-
-            {/* Content shifted down by navbar height */}
-            <main className="pt-16">
-              {children}
-            </main>
+          <SessionProvider session={session}> {/* ✅ tambahkan session prop */}
+            <Navbar />
+            {children}
           </SessionProvider>
         </ThemeProvider>
-
         <ToastContainer
           position="bottom-right"
           autoClose={3000}

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description: "Dashboard Create",
 };
 
+
 export default async function Page() {
   const session = await auth();
   const role = session?.user?.role;
@@ -17,12 +18,10 @@ export default async function Page() {
     redirect("/home");
   }
 
-  const organizerId = parseInt(user.id); 
-
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <div className="md:w-[30%] w-[90%]">
-        <EventDashboard organizerId={organizerId} />
+    <div className="w-full min-h-screen pt-20 px-4 flex justify-center">
+      <div className="w-full max-w-2xl">     
+        <EventDashboard />
       </div>
     </div>
   );
